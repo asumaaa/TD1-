@@ -14,6 +14,7 @@
 #include "list"
 #include "Skydome.h"
 #include "RailCamera.h"
+#include "Filed.h"
 
 /// <summary>
 /// ゲームシーン
@@ -58,12 +59,13 @@ class GameScene {
 	//3Dモデル
 	Model* model_;
 
-	WorldTransform worldTransform_[3];
-
 	ViewProjection viewProjection_;
 
 	//レールカメラ
 	std::unique_ptr<RailCamera>railCamera_;
+
+	//レーン
+	Filed filed_[3];
 
 	/// <summary>
 	/// ゲームシーン用

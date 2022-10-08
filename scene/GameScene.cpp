@@ -18,23 +18,12 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	for (int i = 0; i < 3; i++)
 	{
-		worldTransform_[i].Initialize();
-		worldTransformUpdate(&worldTransform_[i]);
+		filed_[i].Initialize(model_, -10);
 	}
 }
 
 void GameScene::Update(){
 	debugCamera_->Update();
-	worldTransform_[0].scale_ = { 0.5f,0.5f,40.0f };
-	worldTransform_[0].translation_ = { -10.0f,0.0f,0.0f };
-	worldTransform_[1].scale_ = { 0.5f,0.5f,40.0f };
-	worldTransform_[1].translation_ = { 0.0f,0.0f,0.0f };
-	worldTransform_[2].scale_ = { 0.5f,0.5f,40.0f };
-	worldTransform_[2].translation_ = { 10.0f,0.0f,0.0f };
-	for (int i = 0; i < 3; i++)
-	{
-		worldTransformUpdate(&worldTransform_[i]);
-	}
 }
 
 void GameScene::Draw() {
@@ -66,7 +55,7 @@ void GameScene::Draw() {
 	
 	for (int i = 0; i < 3; i++)
 	{
-		model_->Draw(worldTransform_[i], debugCamera_->GetViewProjection());
+		filed_[i].Draw(debugCamera_->GetViewProjection());
 	}
 
 	// 3Dオブジェクト描画後処理
