@@ -9,6 +9,11 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "DebugCamera.h"
+#include "memory"
+#include "list"
+#include "Skydome.h"
+#include "RailCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -46,6 +51,19 @@ class GameScene {
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
+
+	//デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
+
+	//3Dモデル
+	Model* model_;
+
+	WorldTransform worldTransform_[3];
+
+	ViewProjection viewProjection_;
+
+	//レールカメラ
+	std::unique_ptr<RailCamera>railCamera_;
 
 	/// <summary>
 	/// ゲームシーン用

@@ -12,9 +12,30 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
+	//デバッグカメラの生成
+	debugCamera_ = new DebugCamera(1280, 720);
+	//モデル生成
+	model_ = Model::Create();
+	for (int i = 0; i < 3; i++)
+	{
+		worldTransform_[i].Initialize();
+		worldTransformUpdate(&worldTransform_[i]);
+	}
 }
 
-void GameScene::Update() {}
+void GameScene::Update(){
+	debugCamera_->Update();
+	worldTransform_[0].scale_ = { 0.5f,0.5f,40.0f };
+	worldTransform_[0].translation_ = { -10.0f,0.0f,0.0f };
+	worldTransform_[1].scale_ = { 0.5f,0.5f,40.0f };
+	worldTransform_[1].translation_ = { 0.0f,0.0f,0.0f };
+	worldTransform_[2].scale_ = { 0.5f,0.5f,40.0f };
+	worldTransform_[2].translation_ = { 10.0f,0.0f,0.0f };
+	for (int i = 0; i < 3; i++)
+	{
+		worldTransformUpdate(&worldTransform_[i]);
+	}
+}
 
 void GameScene::Draw() {
 
@@ -42,6 +63,11 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	
+	for (int i = 0; i < 3; i++)
+	{
+		model_->Draw(worldTransform_[i], debugCamera_->GetViewProjection());
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
