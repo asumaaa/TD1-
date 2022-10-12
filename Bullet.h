@@ -7,6 +7,7 @@
 #include <list>
 #include <cassert>
 #include"Matrix.h"
+#include"Field.h"
 
 class GameScene;
 
@@ -39,6 +40,14 @@ private:
 	//デスフラグ
 	bool isDead_ = false;
 
+	float depth = 40.0f;	//奥行
+	float xDifference = 10.0f;	//左右差
+
+	//ノーツの速度
+	Vector3 kBulletSpeed = { 0.0f,0.0f,-0.2f };
+
+	//現在のレーン
+	Lane lane_;
 
 };
 

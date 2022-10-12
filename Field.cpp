@@ -23,7 +23,7 @@ void Field::Initialize(Model* model, uint32_t textureHandle, Lane lane)
 	lane_ = lane;
 	if (lane == Left)
 	{
-		worldTransform_.translation_ = { -10.0f,0.0f,25.0f };
+		worldTransform_.translation_ = { -laneWidth,0.0f,25.0f };
 	}
 	else if (lane == Center)
 	{
@@ -31,7 +31,7 @@ void Field::Initialize(Model* model, uint32_t textureHandle, Lane lane)
 	}
 	else if (lane == Right)
 	{
-		worldTransform_.translation_ = { 10.0f,0.0f,25.0f };
+		worldTransform_.translation_ = { laneWidth,0.0f,25.0f };
 	}
 	worldTransformUpdate(&worldTransform_);
 }
@@ -58,7 +58,7 @@ void Field::Update()
 	//LaneÇ…âûÇ∂ÇƒXÇïœçX
 	if (lane_ == Left)
 	{
-		worldTransform_.translation_ = { -10.0f,0.0f,25.0f };
+		worldTransform_.translation_ = { -laneWidth,0.0f,25.0f };
 	}
 	else if (lane_ == Center)
 	{
@@ -66,7 +66,7 @@ void Field::Update()
 	}
 	else if (lane_ == Right)
 	{
-		worldTransform_.translation_ = { 10.0f,0.0f,25.0f };
+		worldTransform_.translation_ = { laneWidth,0.0f,25.0f };
 	}
 	worldTransformUpdate(&worldTransform_);
 }

@@ -33,5 +33,8 @@ private:
 
 	//Œ»İ‚ÌƒŒ[ƒ“
 	Lane lane_;
+
+	//ƒŒ[ƒ“‚Ì•
+	float laneWidth = 10.0f;
 };
 
