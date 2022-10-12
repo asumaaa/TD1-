@@ -175,24 +175,37 @@ void GameScene::UpdateBulletPopCommands()
 		}
 		// POPコマンド
 		if (word.find("POP") == 0) {
-			// X座標
-			std::getline(line_stream, word, ',');
-			float x = static_cast<float>(std::atof(word.c_str()));
+			//// X座標
+			//std::getline(line_stream, word, ',');
+			//float x = static_cast<float>(std::atof(word.c_str()));
 
-			// Y座標
-			std::getline(line_stream, word, ',');
-			float y = static_cast<float>(std::atof(word.c_str()));
+			//// Y座標
+			//std::getline(line_stream, word, ',');
+			//float y = static_cast<float>(std::atof(word.c_str()));
 
-			// Z座標
+			//// Z座標
+			//std::getline(line_stream, word, ',');
+			//float z = static_cast<float>(std::atof(word.c_str()));
+
+			//レーン
 			std::getline(line_stream, word, ',');
-			float z = static_cast<float>(std::atof(word.c_str()));
+			int lane = static_cast<int>(std::atof(word.c_str()));
 
 			// ID
 			std::getline(line_stream, word, ',');
 			int ID = static_cast<int>(std::atof(word.c_str()));
 
-
-			GenerBullet(Vector3(x, y, z), ID);
+			float depth = 10.0f;	//奥行
+			float xDifference = 10.0f;	//左右差
+			if (lane == 1) {
+				GenerBullet(Vector3(-xDifference, 0, depth), ID);
+			}else if (lane == 2) {
+				GenerBullet(Vector3(0, 0, depth), ID);
+			}else if (lane == 3) {
+				GenerBullet(Vector3(xDifference, 0, depth), ID);
+			}else {
+				GenerBullet(Vector3(0, 3.0f, depth), ID);
+			}
 		}
 		// WAITコマンド
 		else if (word.find("WAIT") == 0) {
