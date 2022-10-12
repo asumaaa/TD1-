@@ -16,3 +16,5 @@ void vecWorldTransform(Vector3* vector_, WorldTransform* worldTransform_);
 float vector3Length(Vector3 vector_);
 //正規化した値を返す関数
 Vector3 vector3Normalize(Vector3 vector_);
+//matWorld*Vecのアフィン変換
+Vector3 bVelocity(Vector3& velocity, WorldTransform& worldTransform);

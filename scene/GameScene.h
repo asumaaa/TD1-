@@ -17,6 +17,7 @@
 #include "Bullet.h"
 #include "sstream"
 #include "Field.h"
+#include "Goal.h"
 
 /// <summary>
 /// ゲームシーン
@@ -75,9 +76,12 @@ class GameScene {
 
 	//3Dモデル
 	Model* model_;
-
+	
 	//レーン
 	Field field_[3];
+
+	//ゴール用
+	Goal* goal_ = nullptr;
 
 	ViewProjection viewProjection_;
 
@@ -96,6 +100,7 @@ class GameScene {
 	//待機タイマー
 	int standTime_ = 0;
 
+	
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

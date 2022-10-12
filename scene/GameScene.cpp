@@ -26,6 +26,11 @@ void GameScene::Initialize() {
 	field_[1].Initialize(model_, 0);
 	field_[2].Initialize(model_, 10);
 
+	goal_ = new Goal;
+
+	uint32_t testTexture2_ = TextureManager::Load("black.png");
+	goal_->Initialize(model_, testTexture2_);
+
 
 	//テスト用のテクスチャ
 	testTexture_ = TextureManager::Load("green.png");
@@ -48,6 +53,8 @@ void GameScene::Update() {
 		bullet_->Update();
 
 	}
+
+	goal_->Update();
 
 
 }
@@ -87,6 +94,9 @@ void GameScene::Draw() {
 	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
 		bullet_->Draw(railCamera_->GetViewProjection());
 	}
+
+	goal_->Draw(railCamera_->GetViewProjection());
+	
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
