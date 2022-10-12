@@ -22,6 +22,7 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3)
 
 
 
+
 }
 
 void Bullet::Update()
