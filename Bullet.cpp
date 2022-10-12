@@ -1,5 +1,7 @@
 #include "Bullet.h"
 #include <cmath>
+#include "math.h"
+#define PI 3.141592653589
 
 void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3)
 {
@@ -17,17 +19,54 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3)
 	worldTransform_.scale_ = { 1,1,1 };
 	worldTransform_.rotation_ = { 0,0,0 };
 
-	worldTransformUpdate(&worldTransform_);
-
-
-
-
+	//現在のXによってレーンを変更
+	if (worldTransform_.translation_.x < 0)
+	{
+		lane_ = Left;
+	}
+	else if (worldTransform_.translation_.x == 0)
+	{
+		lane_ = Center;
+	}
+	else if (worldTransform_.translation_.x > 0)
+	{
+		lane_ = Right;
+	}
 
 }
 
 void Bullet::Update()
 {
-	Vector3 kBulletSpeed = { 0.0f,0.0f,-0.2f };
+	//キー入力に応じてLaneを変更
+	if (input_->TriggerKey(DIK_LEFT))
+	{
+		if (lane_ == Left)lane_ = Center;
+		else if (lane_ == Center)lane_ = Left;
+	}
+	if (input_->TriggerKey(DIK_RIGHT))
+	{
+		if (lane_ == Right)lane_ = Center;
+		else if (lane_ == Center)lane_ = Right;
+	}
+
+	//Laneに応じてXを変更
+	if (lane_ == Left)
+	{
+		worldTransform_.translation_.x = -xDifference;
+	}
+	else if (lane_ == Center)
+	{
+		worldTransform_.translation_.x = 0;
+	}
+	else if (lane_ == Right)
+	{
+		worldTransform_.translation_.x = xDifference;
+	}
+	worldTransformUpdate(&worldTransform_);
+
+	//ノーツの速度の処理
+	kBulletSpeedZ += kBulletSpeedAcc;
+	Vector3 kBulletSpeed = { 0.0f,0.0f,-easeIn(kBulletSpeedZ)};
 	worldTransform_.translation_ += kBulletSpeed;
 	worldTransformUpdate(&worldTransform_);
 
@@ -38,4 +77,7 @@ void Bullet::Draw(ViewProjection viewProjection)
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
-
+float Bullet::easeIn(float x)
+{
+	return 1 - cos((x * PI) / 2);
+}

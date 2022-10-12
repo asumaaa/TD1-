@@ -7,6 +7,7 @@
 #include <list>
 #include <cassert>
 #include"Matrix.h"
+#include"Field.h"
 
 class GameScene;
 
@@ -20,6 +21,9 @@ public:
 	bool IsDead() const { return isDead_; }	//死亡時
 	int GetId() { return bulletId_; }	
 	void SetID(int ID) { bulletId_ = ID; }	
+
+	//弾のイージング
+	float easeIn(float x);
 
 private:
 	//ワールド変換データ
@@ -39,6 +43,16 @@ private:
 	//デスフラグ
 	bool isDead_ = false;
 
+	float depth = 40.0f;	//奥行
+	float xDifference = 10.0f;	//左右差
+
+	//ノーツの速度
+	float kBulletSpeedZ = 0.4;
+	//ノーツの加速度
+	float kBulletSpeedAcc = 0.002;
+
+	//現在のレーン
+	Lane lane_;
 
 };
 

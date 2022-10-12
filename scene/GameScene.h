@@ -94,6 +94,8 @@ class GameScene {
 	//テクスチャ
 	uint32_t testTexture_ = 0;
 
+	//レーンデバッグ用のテクスチャ
+	uint32_t laneTexture_[3];
 
 	//待機中フラグ
 	bool isStand_ = false;
