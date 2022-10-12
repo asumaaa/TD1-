@@ -3,7 +3,7 @@
 #include <cassert>
 #define PI 3.141592653589
 
-void RailCamera::Initialize(WorldTransform worldTransform)
+void RailCamera::Initialize()
 {
 	//引数から座標と回転角を受け取る
 	/*worldTransform_.translation_ = worldTransform.translation_;
@@ -13,7 +13,11 @@ void RailCamera::Initialize(WorldTransform worldTransform)
 	worldTransform_.translation_.z = worldTransform.translation_.z;
 	worldTransform_.rotation_ = worldTransform.rotation_;*/
 	//ビュープロジェクションの初期化
+	
+	viewProjection_.eye = { 0,10,-50 };
+	viewProjection_.target = { 0,0,-30 };
 	viewProjection_.Initialize();
+
 }
 
 void RailCamera::Update(WorldTransform worldTransform)
@@ -50,7 +54,7 @@ void RailCamera::Update(WorldTransform worldTransform)
 	float y = worldTransform.translation_.y + (sin(worldTransform.rotation_.x) * length * 2);
 	float z = worldTransform.translation_.z - (cos(worldTransform.rotation_.y) * length) - (cos(worldTransform.rotation_.x) * length );*/
 
-	float x, y, z;
+	/*float x, y, z;
 
 	x = worldTransform.translation_.x + (sin(-worldTransform.rotation_.x + (PI / 2)) * cos(-worldTransform.rotation_.y - (PI / 2)) * length);
 	y = worldTransform.translation_.y + (cos(-worldTransform.rotation_.x + (PI / 2)) * length);
@@ -66,5 +70,5 @@ void RailCamera::Update(WorldTransform worldTransform)
 	}
 	viewProjection_.eye = { x,y,z };
 	viewProjection_.target = { worldTransform.translation_.x, worldTransform.translation_.y, worldTransform.translation_.z };
-	viewProjection_.Initialize();
+	viewProjection_.Initialize();*/
 }

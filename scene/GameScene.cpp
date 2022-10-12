@@ -17,39 +17,38 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(1280, 720);
 	//モデル生成
 	model_ = Model::Create();
-	for (int i = 0; i < 3; i++)
-	{
-		worldTransform_[i].Initialize();
-		worldTransformUpdate(&worldTransform_[i]);
-	}
+	//レールカメラの生成
+	RailCamera* newRailCamera = new RailCamera();
+	newRailCamera->Initialize();
+	railCamera_.reset(newRailCamera);
+
+	field_[0].Initialize(model_, -10);
+	field_[1].Initialize(model_, 0);
+	field_[2].Initialize(model_, 10);
+
 
 	//テスト用のテクスチャ
-	testTexture_ = TextureManager::Load("white.png");
+	testTexture_ = TextureManager::Load("green.png");
 	BulletReset();
 }
 
-void GameScene::Update(){
+void GameScene::Update() {
 	debugCamera_->Update();
-	worldTransform_[0].scale_ = { 0.5f,0.5f,40.0f };
-	worldTransform_[0].translation_ = { -10.0f,0.0f,0.0f };
-	worldTransform_[1].scale_ = { 0.5f,0.5f,40.0f };
-	worldTransform_[1].translation_ = { 0.0f,0.0f,0.0f };
-	worldTransform_[2].scale_ = { 0.5f,0.5f,40.0f };
-	worldTransform_[2].translation_ = { 10.0f,0.0f,0.0f };
-	for (int i = 0; i < 3; i++)
-	{
-		worldTransformUpdate(&worldTransform_[i]);
-	}
-	
+
+
 	//弾発生
 	UpdateBulletPopCommands();
 
-	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {	
+	for (int i = 0; i < 3; i++) {
+		field_[i].Update();
+	}
+
+	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
 
 		bullet_->Update();
 
 	}
-	
+
 
 }
 
@@ -79,14 +78,14 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	
+
 	for (int i = 0; i < 3; i++)
 	{
-		model_->Draw(worldTransform_[i], debugCamera_->GetViewProjection());
+		field_[i].Draw(railCamera_->GetViewProjection());
 	}
 
 	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-		bullet_->Draw(debugCamera_->GetViewProjection());
+		bullet_->Draw(railCamera_->GetViewProjection());
 	}
 
 	// 3Dオブジェクト描画後処理
@@ -103,7 +102,7 @@ void GameScene::Draw() {
 
 	// デバッグテキストの描画
 	debugText_->DrawAll(commandList);
-	
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
@@ -175,17 +174,6 @@ void GameScene::UpdateBulletPopCommands()
 		}
 		// POPコマンド
 		if (word.find("POP") == 0) {
-			//// X座標
-			//std::getline(line_stream, word, ',');
-			//float x = static_cast<float>(std::atof(word.c_str()));
-
-			//// Y座標
-			//std::getline(line_stream, word, ',');
-			//float y = static_cast<float>(std::atof(word.c_str()));
-
-			//// Z座標
-			//std::getline(line_stream, word, ',');
-			//float z = static_cast<float>(std::atof(word.c_str()));
 
 			//レーン
 			std::getline(line_stream, word, ',');
@@ -195,15 +183,18 @@ void GameScene::UpdateBulletPopCommands()
 			std::getline(line_stream, word, ',');
 			int ID = static_cast<int>(std::atof(word.c_str()));
 
-			float depth = 10.0f;	//奥行
+			float depth = 40.0f;	//奥行
 			float xDifference = 10.0f;	//左右差
 			if (lane == 1) {
 				GenerBullet(Vector3(-xDifference, 0, depth), ID);
-			}else if (lane == 2) {
+			}
+			else if (lane == 2) {
 				GenerBullet(Vector3(0, 0, depth), ID);
-			}else if (lane == 3) {
+			}
+			else if (lane == 3) {
 				GenerBullet(Vector3(xDifference, 0, depth), ID);
-			}else {
+			}
+			else {
 				GenerBullet(Vector3(0, 3.0f, depth), ID);
 			}
 		}

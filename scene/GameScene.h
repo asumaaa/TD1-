@@ -16,6 +16,7 @@
 #include "RailCamera.h"
 #include "Bullet.h"
 #include "sstream"
+#include "Field.h"
 
 /// <summary>
 /// ゲームシーン
@@ -75,7 +76,8 @@ class GameScene {
 	//3Dモデル
 	Model* model_;
 
-	WorldTransform worldTransform_[3];
+	//レーン
+	Field field_[3];
 
 	ViewProjection viewProjection_;
 

@@ -6,7 +6,7 @@
 class RailCamera
 {
 public:
-	void Initialize(WorldTransform worldTransform);
+	void Initialize();
 	void Update(WorldTransform worldTransform);
 	//ÉQÉbÉ^Å[
 	ViewProjection GetViewProjection() { return viewProjection_; }
