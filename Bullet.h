@@ -22,6 +22,9 @@ public:
 	int GetId() { return bulletId_; }	
 	void SetID(int ID) { bulletId_ = ID; }	
 
+	//弾のイージング
+	float easeIn(float x);
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -44,7 +47,9 @@ private:
 	float xDifference = 10.0f;	//左右差
 
 	//ノーツの速度
-	Vector3 kBulletSpeed = { 0.0f,0.0f,-0.2f };
+	float kBulletSpeedZ = 0.4;
+	//ノーツの加速度
+	float kBulletSpeedAcc = 0.002;
 
 	//現在のレーン
 	Lane lane_;

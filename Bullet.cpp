@@ -1,5 +1,7 @@
 #include "Bullet.h"
 #include <cmath>
+#include "math.h"
+#define PI 3.141592653589
 
 void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3)
 {
@@ -62,6 +64,9 @@ void Bullet::Update()
 	}
 	worldTransformUpdate(&worldTransform_);
 
+	//ƒm[ƒc‚Ì‘¬“x‚Ìˆ—
+	kBulletSpeedZ += kBulletSpeedAcc;
+	Vector3 kBulletSpeed = { 0.0f,0.0f,-easeIn(kBulletSpeedZ)};
 	worldTransform_.translation_ += kBulletSpeed;
 	worldTransformUpdate(&worldTransform_);
 
@@ -72,4 +77,7 @@ void Bullet::Draw(ViewProjection viewProjection)
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
-
+float Bullet::easeIn(float x)
+{
+	return 1 - cos((x * PI) / 2);
+}
