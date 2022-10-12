@@ -22,14 +22,20 @@ void GameScene::Initialize() {
 	newRailCamera->Initialize();
 	railCamera_.reset(newRailCamera);
 
-	field_[0].Initialize(model_, -10);
-	field_[1].Initialize(model_, 0);
-	field_[2].Initialize(model_, 10);
 
 
 	//テスト用のテクスチャ
 	testTexture_ = TextureManager::Load("green.png");
 	BulletReset();
+
+	//レーン
+	laneTexture_[0] = TextureManager::Load("purple.png");
+	laneTexture_[1] = TextureManager::Load("orange.png");
+	laneTexture_[2] = TextureManager::Load("yellow.png");
+	field_[0].Initialize(model_, laneTexture_[0], Left);
+	field_[1].Initialize(model_, laneTexture_[1], Center);
+	field_[2].Initialize(model_, laneTexture_[2], Right);
+
 }
 
 void GameScene::Update() {
