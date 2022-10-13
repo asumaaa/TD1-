@@ -5,7 +5,16 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {
+
+GameScene::~GameScene() 
+{
+	/*delete model_;
+	for (int i = 0; i < 3; i++)
+	{
+		delete field_;
+	}
+	delete debugCamera_;
+	delete goal_;*/
 
 }
 
