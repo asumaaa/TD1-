@@ -9,6 +9,7 @@ public:
 	void Initialize(Model* model, uint32_t textureHandle);
 	void Update();
 	void Draw(ViewProjection viewProjection);
+	Vector3 GetWorldPosition();
 private:
 	WorldTransform worldTransform_[4];
 	Model* model_ = nullptr;

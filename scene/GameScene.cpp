@@ -5,6 +5,7 @@
 
 GameScene::GameScene() {}
 
+
 GameScene::~GameScene() 
 {
 	/*delete model_;
@@ -14,9 +15,12 @@ GameScene::~GameScene()
 	}
 	delete debugCamera_;
 	delete goal_;*/
+
 }
 
 void GameScene::Initialize() {
+
+	
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -53,6 +57,12 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	//デリート
+	//デスフラグの立った弾削除
+	bullets_.remove_if([](std::unique_ptr<Bullet>& bullet_) { return bullet_->IsDead(); });
+
+
 	debugCamera_->Update();
 
 
@@ -67,9 +77,12 @@ void GameScene::Update() {
 
 		bullet_->Update();
 
+
 	}
 
 	goal_->Update();
+
+	CheckAllCollisions();
 
 
 }
@@ -248,3 +261,35 @@ void GameScene::BulletReset()
 }
 
 
+void GameScene::CheckAllCollisions() {
+
+	//判定対象AとBの座標
+	Vector3 posA, posB;
+
+
+
+#pragma region 自弾と敵キャラの当たり判定
+	//敵キャラの座標
+	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
+		posA = bullet_->GetWorldPosition();
+
+		
+			//自弾の座標
+		posB = goal_->GetWorldPosition();
+
+			float x = posB.x - posA.x;
+			float y = posB.y - posA.y;
+			float z = posB.z - posA.z;
+
+			float cd = sqrt(x * x + y * y + z * z);
+
+			if (cd <= 4.0f) {
+				//敵キャラの衝突時コールバックを呼び出す
+				bullet_->OnCollision();
+				
+				//衝突時コールバックを呼び出す
+				//goal_->OnCollision();
+			}
+		
+	}
+}
