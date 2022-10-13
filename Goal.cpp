@@ -12,7 +12,7 @@ void Goal::Initialize(Model* model, uint32_t textureHandle)
 
 	for (int i = 0; i < 4; i++) {
 		worldTransform_[i].Initialize();
-		worldTransform_[i].translation_ = {0,0,-40};
+		worldTransform_[i].translation_ = {0,0,0};
 		worldTransform_[i].scale_ = {0.5,0.2,0.2};
 	}
 	worldTransform_[0].rotation_ = { 0,0,0 };
@@ -43,7 +43,7 @@ void Goal::Update()
 		
 		Vector3 kVec = { 0,sinf(modelVelocityAngle_*PI /180.0f)+2.4f,0};
 		kVec = bVelocity(kVec, worldTransform_[i]);
-		worldTransform_[i].translation_ = { kVec.x,kVec.y,-35 };
+		worldTransform_[i].translation_ = { kVec.x,kVec.y,-38 };
 		worldTransformUpdate(&worldTransform_[i]);
 
 	}
