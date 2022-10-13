@@ -25,7 +25,7 @@ void GameScene::Initialize() {
 
 	goal_ = new Goal;
 
-	uint32_t testTexture2_ = TextureManager::Load("black.png");
+	uint32_t testTexture2_ = TextureManager::Load("white.png");
 	goal_->Initialize(model_, testTexture2_);
 
 
