@@ -65,6 +65,9 @@ class GameScene {
 	void BulletReset();
 	void UpdateBulletPopCommands();
 
+	//当たり判定
+	void CheckAllCollisions();
+
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;

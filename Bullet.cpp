@@ -37,6 +37,7 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3)
 
 void Bullet::Update()
 {
+	
 	//キー入力に応じてLaneを変更
 	if (input_->TriggerKey(DIK_LEFT))
 	{
@@ -81,3 +82,21 @@ float Bullet::easeIn(float x)
 {
 	return 1 - cos((x * PI) / 2);
 }
+
+Vector3 Bullet::GetWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列の平行移動成分
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+void Bullet::OnCollision()
+{
+	isDead_ = true;
+}
+

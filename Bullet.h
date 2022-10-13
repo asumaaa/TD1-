@@ -25,6 +25,12 @@ public:
 	//弾のイージング
 	float easeIn(float x);
 
+	////ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	//衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
