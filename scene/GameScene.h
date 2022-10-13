@@ -69,7 +69,7 @@ class GameScene {
 	void CheckAllCollisions();
 
 	int gameLevel_ = 0;
-	int levelMax = 4;
+	int levelMax_ = 8;
 
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;

@@ -59,8 +59,8 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	gameTimer_++;
-	if (gameTimer_ > 300 ) {
-		if (gameLevel_ <= levelMax) {
+	if (gameTimer_ > 200 ) {
+		if (gameLevel_ < levelMax_) {
 			gameTimer_ = 0;
 			gameLevel_++;
 		}else{
@@ -170,7 +170,7 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID)
 	//敵キャラの初期化
 	float kBulSpeed = 0.4f;
 	if (gameLevel_ > 0) {
-		kBulSpeed += gameLevel_ * 0.3f;
+		kBulSpeed += gameLevel_ * 0.1f +1.0f;
 	}
 	
 
@@ -262,12 +262,13 @@ void GameScene::UpdateBulletPopCommands()
 
 			//待機開始
 			isStand_ = true;
+			int maxTimeDiv = 10;
 			if (gameLevel_ <= 0) {
-				standTime_ = waitTime * (levelMax - gameLevel_) / levelMax;
+				standTime_ = waitTime * (maxTimeDiv - gameLevel_) / maxTimeDiv;
 			}
 			else {
 				
-				standTime_ = waitTime * (levelMax - gameLevel_) / levelMax;
+				standTime_ = waitTime * (maxTimeDiv - gameLevel_) / maxTimeDiv;
 			}
 
 			//抜ける
