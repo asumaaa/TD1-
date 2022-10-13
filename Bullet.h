@@ -49,7 +49,7 @@ private:
 	//ノーツの速度
 	float kBulletSpeedZ = 0.4;
 	//ノーツの加速度
-	float kBulletSpeedAcc = 0.002;
+	float kBulletSpeedAcc = 0.003;
 
 	//現在のレーン
 	Lane lane_;

@@ -5,7 +5,16 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() 
+{
+	/*delete model_;
+	for (int i = 0; i < 3; i++)
+	{
+		delete field_;
+	}
+	delete debugCamera_;
+	delete goal_;*/
+}
 
 void GameScene::Initialize() {
 
@@ -25,7 +34,7 @@ void GameScene::Initialize() {
 
 	goal_ = new Goal;
 
-	uint32_t testTexture2_ = TextureManager::Load("black.png");
+	uint32_t testTexture2_ = TextureManager::Load("white.png");
 	goal_->Initialize(model_, testTexture2_);
 
 

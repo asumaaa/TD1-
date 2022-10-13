@@ -38,12 +38,12 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3)
 void Bullet::Update()
 {
 	//ƒL[“ü—Í‚É‰ž‚¶‚ÄLane‚ð•ÏX
-	if (input_->TriggerKey(DIK_LEFT))
+	if (input_->TriggerKey(DIK_LEFT) && input_->PushKey(DIK_SPACE))
 	{
 		if (lane_ == Left)lane_ = Center;
 		else if (lane_ == Center)lane_ = Left;
 	}
-	if (input_->TriggerKey(DIK_RIGHT))
+	if (input_->TriggerKey(DIK_RIGHT) && input_->PushKey(DIK_SPACE))
 	{
 		if (lane_ == Right)lane_ = Center;
 		else if (lane_ == Center)lane_ = Right;
