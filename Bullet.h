@@ -14,7 +14,7 @@ class GameScene;
 class Bullet
 {
 public:
-	void Initialize(Model* model, uint32_t textureHandle, Vector3 vector3);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 vector3,float kBulSpeed);
 	void Update();
 	void Draw(ViewProjection viewProjection);
 	

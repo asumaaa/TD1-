@@ -6,7 +6,7 @@
 GameScene::GameScene() {}
 
 
-GameScene::~GameScene() 
+GameScene::~GameScene()
 {
 	/*delete model_;
 	for (int i = 0; i < 3; i++)
@@ -20,7 +20,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize() {
 
-	
+
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
@@ -57,6 +57,17 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	gameTimer_++;
+	if (gameTimer_ > 300 ) {
+		if (gameLevel_ <= levelMax) {
+			gameTimer_ = 0;
+			gameLevel_++;
+		}else{
+			gameTimer_ = 0;
+		}
+		
+	}
 
 	//デリート
 	//デスフラグの立った弾削除
@@ -124,7 +135,7 @@ void GameScene::Draw() {
 	}
 
 	goal_->Draw(railCamera_->GetViewProjection());
-	
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -157,7 +168,13 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID)
 	//生成
 	std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
 	//敵キャラの初期化
-	newBullet->Initialize(model_, testTexture_, BulletPos);
+	float kBulSpeed = 0.4f;
+	if (gameLevel_ > 0) {
+		kBulSpeed += gameLevel_ * 0.3f;
+	}
+	
+
+	newBullet->Initialize(model_, testTexture_, BulletPos,kBulSpeed);
 
 	newBullet->SetID(ID);
 
@@ -245,7 +262,13 @@ void GameScene::UpdateBulletPopCommands()
 
 			//待機開始
 			isStand_ = true;
-			standTime_ = waitTime;
+			if (gameLevel_ <= 0) {
+				standTime_ = waitTime * (levelMax - gameLevel_) / levelMax;
+			}
+			else {
+				
+				standTime_ = waitTime * (levelMax - gameLevel_) / levelMax;
+			}
 
 			//抜ける
 			break;
@@ -273,23 +296,23 @@ void GameScene::CheckAllCollisions() {
 	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
 		posA = bullet_->GetWorldPosition();
 
-		
-			//自弾の座標
+
+		//自弾の座標
 		posB = goal_->GetWorldPosition();
 
-			float x = posB.x - posA.x;
-			float y = posB.y - posA.y;
-			float z = posB.z - posA.z;
+		float x = posB.x - posA.x;
+		float y = posB.y - posA.y;
+		float z = posB.z - posA.z;
 
-			float cd = sqrt(x * x + y * y + z * z);
+		float cd = sqrt(x * x + y * y + z * z);
 
-			if (cd <= 4.0f) {
-				//敵キャラの衝突時コールバックを呼び出す
-				bullet_->OnCollision();
-				
-				//衝突時コールバックを呼び出す
-				//goal_->OnCollision();
-			}
-		
+		if (cd <= 4.0f) {
+			//敵キャラの衝突時コールバックを呼び出す
+			bullet_->OnCollision();
+
+			//衝突時コールバックを呼び出す
+			//goal_->OnCollision();
+		}
+
 	}
 }

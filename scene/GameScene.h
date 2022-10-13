@@ -68,6 +68,9 @@ class GameScene {
 	//当たり判定
 	void CheckAllCollisions();
 
+	int gameLevel_ = 0;
+	int levelMax = 4;
+
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -105,6 +108,8 @@ class GameScene {
 	//待機タイマー
 	int standTime_ = 0;
 
+	int gameTimer_ = 0;
+	
 	
 	/// <summary>
 	/// ゲームシーン用

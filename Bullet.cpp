@@ -3,7 +3,7 @@
 #include "math.h"
 #define PI 3.141592653589
 
-void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3)
+void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, float kBulSpeed)
 {
 	// NULLポインタチェック
 	assert(model);
