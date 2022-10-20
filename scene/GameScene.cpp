@@ -19,28 +19,25 @@ GameScene::~GameScene()
 }
 
 void GameScene::Initialize() {
-
-
-
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
+
 	//デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
+
 	//モデル生成
 	model_ = Model::Create();
+
 	//レールカメラの生成
 	RailCamera* newRailCamera = new RailCamera();
 	newRailCamera->Initialize();
 	railCamera_.reset(newRailCamera);
-
-
 	goal_ = new Goal;
 
-	uint32_t testTexture2_ = TextureManager::Load("white.png");
+	testTexture2_ = TextureManager::Load("white.png");
 	goal_->Initialize(model_, testTexture2_);
-
 
 	//テスト用のテクスチャ
 	testTexture_ = TextureManager::Load("green.png");
@@ -70,10 +67,10 @@ void GameScene::Update() {
 	}
 
 	//デリート
-	//デスフラグの立った弾削除
 	bullets_.remove_if([](std::unique_ptr<Bullet>& bullet_) { return bullet_->IsDead(); });
+	effects_.remove_if([](std::unique_ptr<Effect>& effect_) { return effect_->IsDead(); });
 
-
+	//デバッグカメラアップデート
 	debugCamera_->Update();
 
 
@@ -85,10 +82,11 @@ void GameScene::Update() {
 	}
 
 	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-
 		bullet_->Update();
+	}
 
-
+	for (std::unique_ptr<Effect>& effect_ : effects_) {
+		effect_->Update();
 	}
 
 	goal_->Update();
@@ -134,6 +132,9 @@ void GameScene::Draw() {
 		bullet_->Draw(railCamera_->GetViewProjection());
 	}
 
+	for (std::unique_ptr<Effect>& effect_ : effects_) {
+		effect_->Draw(railCamera_->GetViewProjection());
+	}
 	goal_->Draw(railCamera_->GetViewProjection());
 
 
@@ -160,7 +161,6 @@ void GameScene::Draw() {
 
 void GameScene::AddBullet(std::unique_ptr<Bullet>& Bullet)
 {
-	bullets_.push_back(std::move(Bullet));
 }
 
 void GameScene::GenerBullet(Vector3 BulletPos, int ID)
@@ -183,9 +183,23 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID)
 
 }
 
+void GameScene::GenerEffect(Vector3 pos)
+{
+	//生成
+	std::unique_ptr<Effect> newEffect = std::make_unique<Effect>();
+	//敵キャラの初期化
+
+	newEffect->Initialize(model_, testTexture_,goal_->GetWorldPosition());
+
+	//リストに登録する
+	effects_.push_back(std::move(newEffect));
+
+}
+
+
+
 void GameScene::LoadBulletPopData()
 {
-
 	//ファイルを開く
 	std::ifstream file;
 	file.open("Resources/enemyPop2.csv");
@@ -310,6 +324,7 @@ void GameScene::CheckAllCollisions() {
 		if (cd <= 4.0f) {
 			//敵キャラの衝突時コールバックを呼び出す
 			bullet_->OnCollision();
+			GenerEffect(goal_->GetWorldPosition());
 
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();

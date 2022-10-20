@@ -6,10 +6,18 @@
 class Goal
 {
 public:
+	/// <summary>
+	/// 初期化,更新,描画
+	/// </summary>
 	void Initialize(Model* model, uint32_t textureHandle);
 	void Update();
 	void Draw(ViewProjection viewProjection);
-	Vector3 GetWorldPosition();
+
+	Vector3 GetWorldPosition();	//ワールド座標取得
+	
+	void OnCollision();	//触れたとき
+	
+
 private:
 	WorldTransform worldTransform_[4];
 	Model* model_ = nullptr;
@@ -18,4 +26,5 @@ private:
 
 	uint32_t textureHandle_ = 0;
 };
+
 

@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "DebugText.h"
@@ -18,6 +17,7 @@
 #include "sstream"
 #include "Field.h"
 #include "Goal.h"
+#include "Effect.h"
 
 /// <summary>
 /// ゲームシーン
@@ -57,6 +57,11 @@ class GameScene {
 	//弾を足す
 	void AddBullet(std::unique_ptr<Bullet>& Bullet);
 	void GenerBullet(Vector3 BulletPos, int ID);
+
+	//エフェクト用
+	std::list<std::unique_ptr<Effect>> effects_;
+	void GenerEffect(Vector3 pos);
+
 	
 	/// <summary>
 	/// 敵発生データ読み込み
@@ -91,6 +96,9 @@ class GameScene {
 
 	ViewProjection viewProjection_;
 
+	//エフェクト用
+	Effect* effect_ = nullptr;
+
 	//レールカメラ
 	std::unique_ptr<RailCamera>railCamera_;
 
@@ -99,6 +107,7 @@ class GameScene {
 
 	//テクスチャ
 	uint32_t testTexture_ = 0;
+	uint32_t testTexture2_ = 0;
 
 	//レーンデバッグ用のテクスチャ
 	uint32_t laneTexture_[3];

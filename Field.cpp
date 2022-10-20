@@ -16,8 +16,6 @@ void Field::Initialize(Model* model, uint32_t textureHandle, Lane lane)
 	worldTransform_.Initialize();
 
 	worldTransform_.scale_ = { 0.3f,0.2f,length };
-	/*worldTransform_.translation_ = { posX,0.0f,25.0f };*/
-	/*worldTransformUpdate(&worldTransform_);*/
 
 	//xÀ•W‚É‰‚¶‚ÄŒ»İ‚ÌƒŒ[ƒ“‚ğ”»’è
 	lane_ = lane;
