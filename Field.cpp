@@ -49,18 +49,56 @@ void Field::Draw(ViewProjection viewProjection)
 void Field::Update()
 {
 	//キー入力に応じてLaneを変更
-	if (input_->PushKey(DIK_LEFT) && input_->TriggerKey(DIK_SPACE))
+	if (input_->PushKey(DIK_LEFT) && input_->TriggerKey(DIK_SPACE)
+		&& isChangeLeft_ == false&& isChangeRight_ == false)
 	{
 		/*if (lane_ == Left)lane_ = Center;
 		else if (lane_ == Center)lane_ = Left;*/
 		isChangeLeft_ = true;
 
-	}else if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE))
+	}else if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE)
+		&& isChangeLeft_ == false && isChangeRight_ == false)
 	{
 		/*if (lane_ == Right)lane_ = Center;
 		else if (lane_ == Center)lane_ = Right;*/
 		isChangeRight_ = true;
 	}
+
+	if (time_ >= maxTime_) {	//タイムリセット
+		time_ = 0;
+		if (isChangeLeft_ == true) {
+			isChangeLeft_ = false;
+			if (lane_ == Left) {
+				lane_ = Center;
+			}
+			else if (lane_ == Center) {
+				lane_ = Left;
+			}
+		}
+		if (isChangeRight_ == true) {
+			isChangeRight_ = false;
+			if (lane_ == Right) {
+				lane_ = Center;
+			}
+			else if (lane_ == Center) {
+				lane_ = Right;
+			}
+		}
+
+		if (lane_ == Left)
+		{
+			worldTransform_.translation_ = { -laneWidth,0.0f,zLen_ };
+		}
+		else if (lane_ == Center)
+		{
+			worldTransform_.translation_ = { 0.0f,0.0f,zLen_ };
+		}
+		else if (lane_ == Right)
+		{
+			worldTransform_.translation_ = { laneWidth,0.0f,zLen_ };
+		}
+	}
+
 
 	if (isChangeLeft_ == true) {
 		time_++;
@@ -75,35 +113,17 @@ void Field::Update()
 	else if (isChangeRight_ == true) {
 		time_++;
 		if (lane_ == Right) {
-			worldTransform_.translation_.x = ease_->InOutQuad(laneWidth, 0.0, maxTime_, time_);
+			worldTransform_.translation_.x = ease_->InOutQuad(-laneWidth, laneWidth, maxTime_, time_);
 		}
 		if (lane_ == Center) {
-			worldTransform_.translation_.x = ease_->InOutQuad(0.0, laneWidth, maxTime_, time_);
+			worldTransform_.translation_.x = ease_->InOutQuad(laneWidth, 0.0f, maxTime_, time_);
 		}
 	}
 	
+		
+	
 
-	if (time_ == maxTime_) {	//タイムリセット
-		time_ = 0;
-		if (isChangeLeft_ == true) {
-			isChangeLeft_ = false;
-			if (lane_ == Left) {
-				lane_ = Center;
-			}
-			if (lane_ == Center) {
-				lane_ = Left;
-			}
-		}
-		if (isChangeRight_ == true) {
-			isChangeRight_ = false;
-			if (lane_ == Right) {
-				lane_ = Center;
-			}
-			if (lane_ == Center) {
-				lane_ = Right;
-			}
-		}
-	}
+	
 
 	//Laneに応じてXを変更
 	/*if (lane_ == Left)
