@@ -34,7 +34,8 @@ void Effect::Initialize(Model* model, uint32_t textureHandle, Vector3 vec3)
 		velocity_[i] = vector3Normalize(velocity_[i]);
 		
 		rotVector_[i] *= kRotSpeed;
-		velocity_[i] *= kMoveSpeed;
+		velocity_[i] *= kMoveSpeed; 
+		
 		
 	}
 
@@ -44,13 +45,16 @@ void Effect::Initialize(Model* model, uint32_t textureHandle, Vector3 vec3)
 void Effect::Update()
 {
 	for (int i = 0; i < EFFECT_NUM; i++) {
+
+		
+
 		worldTransform_[i].translation_ += velocity_[i];	//ˆÚ“®
 		worldTransform_[i].rotation_ += rotVector_[i];	//‰ñ“]
 		float kMinusScale = 0.04f;
 		worldTransform_[i].scale_ += {-kMinusScale, -kMinusScale, -kMinusScale };
 		worldTransformUpdate(&worldTransform_[i]);
 
-		float limitScale = 0.05;
+		float limitScale = 0.0f;
 		if (worldTransform_[i].scale_.x <= limitScale &&
 			worldTransform_[i].scale_.y <= limitScale &&
 			worldTransform_[i].scale_.z <= limitScale) {

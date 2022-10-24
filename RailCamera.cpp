@@ -14,8 +14,8 @@ void RailCamera::Initialize()
 	worldTransform_.rotation_ = worldTransform.rotation_;*/
 	//ビュープロジェクションの初期化
 	
-	viewProjection_.eye = { 0,10,-50 };
-	viewProjection_.target = { 0,0,-30 };
+	viewProjection_.eye = { 0,7,-50 };
+	viewProjection_.target = { 0,0,-32 };
 	viewProjection_.Initialize();
 
 }

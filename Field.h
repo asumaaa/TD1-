@@ -6,6 +6,7 @@
 #include "memory"
 #include "Model.h"
 #include "Input.h"
+#include "Ease.h"
 
 //レーンの列挙型
 	enum Lane
@@ -23,18 +24,29 @@ public:
 	void Update();
 	//ゲッター
 	Vector3 GetTransration() { return worldTransform_.translation_; };
+
+	void LaneChange();
 private:
 
 	Input* input_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
-	float length = 60.0f;	//レーンの長さ
 
+	float length = 200.0f;	//レーンの長さ
+	float zLen_ = 165.0f;	//okuyuki
 	//現在のレーン
 	Lane lane_;
 
 	//レーンの幅
 	float laneWidth = 10.0f;
+	//イージング用
+	Ease* ease_ = nullptr;
+	bool isChangeRight_ = false;		//レーンチェンジ
+	bool isChangeLeft_ = false;
+	const int maxTime_ = 10;
+	int time_ = 0;
+
+
 };
 

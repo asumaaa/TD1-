@@ -51,6 +51,10 @@ void GameScene::Initialize() {
 	field_[1].Initialize(model_, laneTexture_[1], Center);
 	field_[2].Initialize(model_, laneTexture_[2], Right);
 
+	uint32_t backTexture = TextureManager::Load("backGround.png");
+	spriteBackGround_.reset(
+		Sprite::Create(backTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+
 }
 
 void GameScene::Update() {
@@ -108,6 +112,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	spriteBackGround_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -252,7 +257,7 @@ void GameScene::UpdateBulletPopCommands()
 			std::getline(line_stream, word, ',');
 			int ID = static_cast<int>(std::atof(word.c_str()));
 
-			float depth = 40.0f;	//奥行
+			float depth = 200.0f;	//奥行
 			float xDifference = 10.0f;	//左右差
 			if (lane == 1) {
 				GenerBullet(Vector3(-xDifference, 0, depth), ID);

@@ -1,8 +1,10 @@
 #include "Field.h"
 #include <cassert>
 
+
 void Field::Initialize(Model* model, uint32_t textureHandle, Lane lane)
 {
+
 	assert(model);
 
 	model_ = model;
@@ -19,19 +21,24 @@ void Field::Initialize(Model* model, uint32_t textureHandle, Lane lane)
 
 	//x座標に応じて現在のレーンを判定
 	lane_ = lane;
+	
 	if (lane == Left)
 	{
-		worldTransform_.translation_ = { -laneWidth,0.0f,25.0f };
+		worldTransform_.translation_ = { -laneWidth,0.0f,zLen_ };
 	}
 	else if (lane == Center)
 	{
-		worldTransform_.translation_ = { 0.0f,0.0f,25.0f };
+		worldTransform_.translation_ = { 0.0f,0.0f,zLen_ };
 	}
 	else if (lane == Right)
 	{
-		worldTransform_.translation_ = { laneWidth,0.0f,25.0f };
+		worldTransform_.translation_ = { laneWidth,0.0f,zLen_ };
 	}
 	worldTransformUpdate(&worldTransform_);
+
+	//イージング
+	ease_ = new Ease;
+	
 }
 
 void Field::Draw(ViewProjection viewProjection)
@@ -44,27 +51,77 @@ void Field::Update()
 	//キー入力に応じてLaneを変更
 	if (input_->PushKey(DIK_LEFT) && input_->TriggerKey(DIK_SPACE))
 	{
-		if (lane_ == Left)lane_ = Center;
-		else if (lane_ == Center)lane_ = Left;
-	}
-	if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE))
+		/*if (lane_ == Left)lane_ = Center;
+		else if (lane_ == Center)lane_ = Left;*/
+		isChangeLeft_ = true;
+
+	}else if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE))
 	{
-		if (lane_ == Right)lane_ = Center;
-		else if (lane_ == Center)lane_ = Right;
+		/*if (lane_ == Right)lane_ = Center;
+		else if (lane_ == Center)lane_ = Right;*/
+		isChangeRight_ = true;
+	}
+
+	if (isChangeLeft_ == true) {
+		time_++;
+		if (lane_ == Left) {
+			worldTransform_.translation_.x = ease_->InOutQuad(laneWidth, -laneWidth,maxTime_,time_);
+		}
+		if (lane_ == Center) {
+			worldTransform_.translation_.x = ease_->InOutQuad(-laneWidth, 0.0f, maxTime_, time_);
+		}
+		
+	}
+	else if (isChangeRight_ == true) {
+		time_++;
+		if (lane_ == Right) {
+			worldTransform_.translation_.x = ease_->InOutQuad(laneWidth, 0.0, maxTime_, time_);
+		}
+		if (lane_ == Center) {
+			worldTransform_.translation_.x = ease_->InOutQuad(0.0, laneWidth, maxTime_, time_);
+		}
+	}
+	
+
+	if (time_ == maxTime_) {	//タイムリセット
+		time_ = 0;
+		if (isChangeLeft_ == true) {
+			isChangeLeft_ = false;
+			if (lane_ == Left) {
+				lane_ = Center;
+			}
+			if (lane_ == Center) {
+				lane_ = Left;
+			}
+		}
+		if (isChangeRight_ == true) {
+			isChangeRight_ = false;
+			if (lane_ == Right) {
+				lane_ = Center;
+			}
+			if (lane_ == Center) {
+				lane_ = Right;
+			}
+		}
 	}
 
 	//Laneに応じてXを変更
-	if (lane_ == Left)
+	/*if (lane_ == Left)
 	{
-		worldTransform_.translation_ = { -laneWidth,0.0f,25.0f };
+		worldTransform_.translation_ = { -laneWidth,0.0f,zLen_ };
 	}
 	else if (lane_ == Center)
 	{
-		worldTransform_.translation_ = { 0.0f,0.0f,25.0f };
+		worldTransform_.translation_ = { 0.0f,0.0f,zLen_ };
 	}
 	else if (lane_ == Right)
 	{
-		worldTransform_.translation_ = { laneWidth,0.0f,25.0f };
-	}
+		worldTransform_.translation_ = { laneWidth,0.0f,zLen_ };
+	}*/
 	worldTransformUpdate(&worldTransform_);
+}
+
+void Field::LaneChange()
+{
+
 }
