@@ -24,6 +24,7 @@ public:
 	void Update();
 	//ƒQƒbƒ^[
 	Vector3 GetTransration() { return worldTransform_.translation_; };
+	int GetLane() { return lane_; };
 
 	void LaneChange();
 private:

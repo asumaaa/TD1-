@@ -15,13 +15,14 @@ class Bullet
 {
 public:
 	void Initialize(Model* model, uint32_t textureHandle, Vector3 vector3,float kBulSpeed);
-	void Update();
+	void Update(Vector3 pos);
 	void Draw(ViewProjection viewProjection);
 	
 	bool IsDead() const { return isDead_; }	//死亡時
 	int GetId() { return bulletId_; }	
 	void SetID(int ID) { bulletId_ = ID; }	
-
+	void SetFieldLane(int lane) { fieldLane_ = lane; };
+	int GetFieldLane() { return fieldLane_; }
 	//弾のイージング
 	float easeIn(float x);
 
@@ -59,6 +60,9 @@ private:
 
 	//現在のレーン
 	Lane lane_;
+	
+	//フィールド取得用
+	int fieldLane_ = 0;
 
 };
 

@@ -35,34 +35,37 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, f
 
 }
 
-void Bullet::Update()
+void Bullet::Update(Vector3 pos)
 {
 	
-	//キー入力に応じてLaneを変更
-	if (input_->PushKey(DIK_LEFT) && input_->TriggerKey(DIK_SPACE))
-	{
-		if (lane_ == Left)lane_ = Center;
-		else if (lane_ == Center)lane_ = Left;
-	}
-	if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE))
-	{
-		if (lane_ == Right)lane_ = Center;
-		else if (lane_ == Center)lane_ = Right;
-	}
+	////キー入力に応じてLaneを変更
+	//if (input_->PushKey(DIK_LEFT) && input_->TriggerKey(DIK_SPACE))
+	//{
+	//	if (lane_ == Left)lane_ = Center;
+	//	else if (lane_ == Center)lane_ = Left;
+	//}
+	//if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE))
+	//{
+	//	if (lane_ == Right)lane_ = Center;
+	//	else if (lane_ == Center)lane_ = Right;
+	//}
 
-	//Laneに応じてXを変更
-	if (lane_ == Left)
-	{
-		worldTransform_.translation_.x = -xDifference;
-	}
-	else if (lane_ == Center)
-	{
-		worldTransform_.translation_.x = 0;
-	}
-	else if (lane_ == Right)
-	{
-		worldTransform_.translation_.x = xDifference;
-	}
+	////Laneに応じてXを変更
+	//if (lane_ == Left)
+	//{
+	//	worldTransform_.translation_.x = -xDifference;
+	//}
+	//else if (lane_ == Center)
+	//{
+	//	worldTransform_.translation_.x = 0;
+	//}
+	//else if (lane_ == Right)
+	//{
+	//	worldTransform_.translation_.x = xDifference;
+	//}
+	worldTransform_.translation_.x = pos.x;
+	worldTransform_.translation_.y = pos.y;
+
 	worldTransformUpdate(&worldTransform_);
 
 	//ノーツの速度の処理

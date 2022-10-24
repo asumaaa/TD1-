@@ -56,7 +56,7 @@ class GameScene {
 
 	//弾を足す
 	void AddBullet(std::unique_ptr<Bullet>& Bullet);
-	void GenerBullet(Vector3 BulletPos, int ID);
+	void GenerBullet(Vector3 BulletPos, int ID,int lane);
 
 	//エフェクト用
 	std::list<std::unique_ptr<Effect>> effects_;
@@ -90,6 +90,7 @@ class GameScene {
 	
 	//レーン
 	Field field_[3];
+	int popLane_ = 0;
 
 	//ゴール用
 	Goal* goal_ = nullptr;

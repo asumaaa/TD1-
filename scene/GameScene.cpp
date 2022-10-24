@@ -86,7 +86,7 @@ void GameScene::Update() {
 	}
 
 	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-		bullet_->Update();
+		bullet_->Update(field_[bullet_->GetFieldLane()].GetTransration());
 	}
 
 	for (std::unique_ptr<Effect>& effect_ : effects_) {
@@ -168,7 +168,7 @@ void GameScene::AddBullet(std::unique_ptr<Bullet>& Bullet)
 {
 }
 
-void GameScene::GenerBullet(Vector3 BulletPos, int ID)
+void GameScene::GenerBullet(Vector3 BulletPos, int ID,int lane)
 {
 	//生成
 	std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
@@ -182,6 +182,7 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID)
 	newBullet->Initialize(model_, testTexture_, BulletPos,kBulSpeed);
 
 	newBullet->SetID(ID);
+	newBullet->SetFieldLane(lane);
 
 	//リストに登録する
 	bullets_.push_back(std::move(newBullet));
@@ -259,17 +260,40 @@ void GameScene::UpdateBulletPopCommands()
 
 			float depth = 200.0f;	//奥行
 			float xDifference = 10.0f;	//左右差
+
+			
+
 			if (lane == 1) {
-				GenerBullet(Vector3(-xDifference, 0, depth), ID);
+				for (int i = 0; i < 3; i++) {
+					if (field_[i].GetLane() == 0) {
+						popLane_ = i;
+						break;
+					}
+				}
+				GenerBullet(Vector3(-xDifference, 0, depth), ID,popLane_);
+				
 			}
 			else if (lane == 2) {
-				GenerBullet(Vector3(0, 0, depth), ID);
+				for (int i = 0; i < 3; i++) {
+					if (field_[i].GetLane() == 1) {
+						popLane_ = i;
+						break;
+					}
+				}
+				GenerBullet(Vector3(0, 0, depth), ID,popLane_);
 			}
 			else if (lane == 3) {
-				GenerBullet(Vector3(xDifference, 0, depth), ID);
+				for (int i = 0; i < 3; i++) {
+					if (field_[i].GetLane() == 2) {
+						popLane_ = i;
+						break;
+					}
+				}
+				GenerBullet(Vector3(xDifference, 0, depth), ID,popLane_);
 			}
 			else {
-				GenerBullet(Vector3(0, 3.0f, depth), ID);
+				
+				
 			}
 		}
 		// WAITコマンド
