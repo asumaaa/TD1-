@@ -122,6 +122,10 @@ class GameScene {
 
 	int gameTimer_ = 0;
 	
+	//左テクスチャ
+	std::unique_ptr<Sprite> spriteLeft;
+	//右テクスチャ
+	std::unique_ptr<Sprite> spriteRight;
 	
 	/// <summary>
 	/// ゲームシーン用

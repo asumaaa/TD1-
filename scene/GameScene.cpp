@@ -55,6 +55,13 @@ void GameScene::Initialize() {
 	spriteBackGround_.reset(
 		Sprite::Create(backTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
 
+	uint32_t Lefttexture = TextureManager::Load("left.png");
+	spriteLeft.reset(
+		Sprite::Create(Lefttexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(2.0, -0.5)));
+	//右カーソル
+	uint32_t Righttexture = TextureManager::Load("right.png");
+	spriteRight.reset(
+		Sprite::Create(Righttexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(-1.0, -0.5)));
 }
 
 void GameScene::Update() {
@@ -155,6 +162,14 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	//左カーソル
+	if (input_->PushKey(DIK_LEFT)) {
+		spriteLeft->Draw();
+	}
+	//右カーソル
+	if (input_->PushKey(DIK_RIGHT)) {
+		spriteRight->Draw();
+	}
 	// デバッグテキストの描画
 	debugText_->DrawAll(commandList);
 
