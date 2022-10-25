@@ -199,14 +199,17 @@ void GameScene::GenerEffect(Vector3 pos,int lane)
 	//生成
 	std::unique_ptr<Effect> newEffect = std::make_unique<Effect>();
 	//敵キャラの初期化
-	if (lane == 0) {
-		newEffect->Initialize(model_, laneTexture_[0], goal_->GetWorldPosition());
+	if (lane == Left) {
+		newEffect->Initialize(model_, laneTexture_[Left], goal_->GetWorldPosition());
+		goal_->bulletHit_[Left]++;	//グローバル変数です。ごめんなさい。by細井
 	}
-	else if (lane == 1) {
-		newEffect->Initialize(model_, laneTexture_[1], goal_->GetWorldPosition());
+	else if (lane == Center) {
+		newEffect->Initialize(model_, laneTexture_[Center], goal_->GetWorldPosition());
+		goal_->bulletHit_[Center]++;
 	}
-	else if (lane == 2) {
-		newEffect->Initialize(model_, laneTexture_[2], goal_->GetWorldPosition());
+	else if (lane == Right) {
+		newEffect->Initialize(model_, laneTexture_[Right], goal_->GetWorldPosition());
+		goal_->bulletHit_[Right]++;	
 	}
 
 	//リストに登録する
