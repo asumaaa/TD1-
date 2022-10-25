@@ -98,7 +98,7 @@ Vector3 Bullet::GetWorldPosition()
 	return worldPos;
 }
 
-void Bullet::OnCollision()
+void Bullet::OnCollision(bool isBreak)
 {
 	isDead_ = true;
 }

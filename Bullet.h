@@ -30,7 +30,7 @@ public:
 	Vector3 GetWorldPosition();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
+	void OnCollision(bool isBreak);
 
 private:
 	//ワールド変換データ

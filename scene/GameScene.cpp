@@ -218,17 +218,24 @@ void GameScene::GenerEffect(Vector3 pos,int lane)
 	//生成
 	std::unique_ptr<Effect> newEffect = std::make_unique<Effect>();
 	//敵キャラの初期化
+	int maxHitCount = 14;
 	if (lane == Left) {
 		newEffect->Initialize(model_, laneTexture_[Left], goal_->GetWorldPosition());
-		goal_->bulletHit_[Left]++;	//グローバル変数です。ごめんなさい。by細井
+		if (goal_->bulletHit_[Left] <= maxHitCount) {
+			goal_->bulletHit_[Left]++;	//グローバル変数です。ごめんなさい。by細井
+		}
 	}
 	else if (lane == Center) {
 		newEffect->Initialize(model_, laneTexture_[Center], goal_->GetWorldPosition());
-		goal_->bulletHit_[Center]++;
+		if (goal_->bulletHit_[Center] <= maxHitCount) {
+			goal_->bulletHit_[Center]++;
+		}
 	}
 	else if (lane == Right) {
 		newEffect->Initialize(model_, laneTexture_[Right], goal_->GetWorldPosition());
-		goal_->bulletHit_[Right]++;	
+		if (goal_->bulletHit_[Right] <= maxHitCount) {
+			goal_->bulletHit_[Right]++;
+		}
 	}
 
 	//リストに登録する
@@ -386,11 +393,18 @@ void GameScene::CheckAllCollisions() {
 
 		if (cd <= 4.0f) {
 			//敵キャラの衝突時コールバックを呼び出す
-			bullet_->OnCollision();
+			bullet_->OnCollision(true);
 			GenerEffect(goal_->GetWorldPosition(),bullet_->GetFieldLane());
 
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
+		}
+
+		if (posA.z < -50/*画面外*/) {
+			bullet_->OnCollision(false);
+			if (goal_->bulletHit_[bullet_->GetFieldLane()] >= 5) {
+				goal_->bulletHit_[bullet_->GetFieldLane()]--;
+			}
 		}
 
 
