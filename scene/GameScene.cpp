@@ -51,9 +51,16 @@ void GameScene::Initialize() {
 	field_[1].Initialize(model_, laneTexture_[1], Center);
 	field_[2].Initialize(model_, laneTexture_[2], Right);
 
+	//スプライト
 	uint32_t backTexture = TextureManager::Load("backGround.png");
 	spriteBackGround_.reset(
 		Sprite::Create(backTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+	
+	for (int i = 0; i < 10; i++) {
+		spritePurpleMater_[i].reset(Sprite::Create(laneTexture_[0], Vector2(50 + (20 * i), 500), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+		spriteOrangeMater_[i].reset(Sprite::Create(laneTexture_[1], Vector2(50 + (20 * i), 550), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+		spriteYellowMater_[i].reset(Sprite::Create(laneTexture_[2], Vector2(50 + (20 * i), 600), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+	}
 
 }
 
@@ -154,6 +161,18 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	
+	for (int i = 0; i < 10; i++) {
+		if (i + 1 <= goal_->bulletHit_[0]) {
+			spritePurpleMater_[i]->Draw();
+		}
+		if (i + 1 <= goal_->bulletHit_[1]) {
+			spriteOrangeMater_[i]->Draw();
+		}
+		if (i + 1 <= goal_->bulletHit_[2]) {
+			spriteYellowMater_[i]->Draw();
+		}
+	}
 
 	// デバッグテキストの描画
 	debugText_->DrawAll(commandList);

@@ -111,7 +111,9 @@ class GameScene {
 	uint32_t testTexture2_ = 0;
 	//スプライト
 	std::unique_ptr<Sprite> spriteBackGround_;	//背景
-
+	std::unique_ptr<Sprite> spriteOrangeMater_[10];//
+	std::unique_ptr<Sprite> spritePurpleMater_[10];//
+	std::unique_ptr<Sprite> spriteYellowMater_[10];//
 
 	//レーンデバッグ用のテクスチャ
 	uint32_t laneTexture_[3];
