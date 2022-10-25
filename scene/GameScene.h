@@ -60,7 +60,7 @@ class GameScene {
 
 	//エフェクト用
 	std::list<std::unique_ptr<Effect>> effects_;
-	void GenerEffect(Vector3 pos);
+	void GenerEffect(Vector3 pos, int lane);
 
 	
 	/// <summary>

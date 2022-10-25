@@ -175,11 +175,16 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID,int lane)
 	//敵キャラの初期化
 	float kBulSpeed = 0.4f;
 	if (gameLevel_ > 0) {
-		kBulSpeed += gameLevel_ * 0.1f +1.0f;
+		kBulSpeed += gameLevel_ * 0.1f +1.0f;	//レベルが上がると弾が加速
 	}
 	
-
-	newBullet->Initialize(model_, testTexture_, BulletPos,kBulSpeed);
+	if (lane == 0) {
+		newBullet->Initialize(model_, laneTexture_[0], BulletPos, kBulSpeed);
+	}else if (lane == 1) {
+		newBullet->Initialize(model_, laneTexture_[1], BulletPos, kBulSpeed);
+	}else if (lane == 2) {
+		newBullet->Initialize(model_, laneTexture_[2], BulletPos, kBulSpeed);
+	}
 
 	newBullet->SetID(ID);
 	newBullet->SetFieldLane(lane);
@@ -189,13 +194,20 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID,int lane)
 
 }
 
-void GameScene::GenerEffect(Vector3 pos)
+void GameScene::GenerEffect(Vector3 pos,int lane)
 {
 	//生成
 	std::unique_ptr<Effect> newEffect = std::make_unique<Effect>();
 	//敵キャラの初期化
-
-	newEffect->Initialize(model_, testTexture_,goal_->GetWorldPosition());
+	if (lane == 0) {
+		newEffect->Initialize(model_, laneTexture_[0], goal_->GetWorldPosition());
+	}
+	else if (lane == 1) {
+		newEffect->Initialize(model_, laneTexture_[1], goal_->GetWorldPosition());
+	}
+	else if (lane == 2) {
+		newEffect->Initialize(model_, laneTexture_[2], goal_->GetWorldPosition());
+	}
 
 	//リストに登録する
 	effects_.push_back(std::move(newEffect));
@@ -353,11 +365,12 @@ void GameScene::CheckAllCollisions() {
 		if (cd <= 4.0f) {
 			//敵キャラの衝突時コールバックを呼び出す
 			bullet_->OnCollision();
-			GenerEffect(goal_->GetWorldPosition());
+			GenerEffect(goal_->GetWorldPosition(),bullet_->GetFieldLane());
 
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
 		}
+
 
 	}
 }

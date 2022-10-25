@@ -21,14 +21,13 @@ void Goal::Initialize(Model* model, uint32_t textureHandle)
 	worldTransform_[3].rotation_ = { 0,0,PI / 2 };
 	
 	
-
-
 	for (int i = 0; i < 4; i++) {
 		worldTransformUpdate(&worldTransform_[i]);
-		
 	}
 
-	
+	for (int i = 0; i < 3; i++) {
+		bulletHit_[i] = 0;
+	}
 
 }
 
@@ -47,6 +46,8 @@ void Goal::Update()
 		worldTransformUpdate(&worldTransform_[i]);
 
 	}
+
+	
 }
 
 void Goal::Draw(ViewProjection viewProjection)

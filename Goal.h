@@ -17,7 +17,7 @@ public:
 	
 	void OnCollision();	//êGÇÍÇΩÇ∆Ç´
 	
-
+	int bulletHit_[3] = {};
 private:
 	WorldTransform worldTransform_[4];
 	Model* model_ = nullptr;
@@ -25,6 +25,7 @@ private:
 	float modelVelocityAngle_ = 0; //digrees
 
 	uint32_t textureHandle_ = 0;
+	
 };
 
 
