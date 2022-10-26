@@ -102,8 +102,17 @@ void GameScene::Update() {
 	case SceneNo::Operate: //操作説明(チュートリアル)
 		if (input_->TriggerKey(DIK_SPACE) && sceneNo_ == SceneNo::Operate) {
 			sceneNo_ = SceneNo::Game;
+			for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
+				bullet_->OnCollision(false);
+			}
 			BulletReset();
 			hit_ = 0;
+			gameLevel_ = 0;
+			gameTimer_ = 0;
+			goal_->bulletHit_[Left] = 0;
+			goal_->bulletHit_[Center] = 0;
+			goal_->bulletHit_[Right] = 0;
+			
 		}
 		break;
 

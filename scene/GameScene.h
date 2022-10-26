@@ -74,7 +74,7 @@ class GameScene {
 	void CheckAllCollisions();
 
 	int gameLevel_ = 0;
-	int levelMax_ = 8;
+	const int levelMax_ = 8;
 
 	//シーン切り替え
 	enum class SceneNo {
