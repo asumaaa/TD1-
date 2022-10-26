@@ -274,7 +274,7 @@ void GameScene::Draw() {
 		debugText_->SetScale(5.0f);
 		debugText_->Printf("%d/200", hit_);
 
-		if (hit_ > 172) {
+		if (hit_ > 179) {
 			debugText_->SetPos(420.0f, 100.0f);
 			debugText_->SetScale(5.0f);
 			debugText_->Printf("rank S");
