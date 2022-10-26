@@ -272,7 +272,7 @@ void GameScene::Draw() {
 		spriteScore_->Draw();
 		debugText_->SetPos(630.0f, 340.0f);
 		debugText_->SetScale(5.0f);
-		debugText_->Printf("%d/300", hit_);
+		debugText_->Printf("%d/200", hit_);
 
 	}
 
