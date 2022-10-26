@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "Input.h"
 #include "Ease.h"
+#include <Ease.h>
 
 //ƒŒ[ƒ“‚Ì—ñ‹“Œ^
 	enum Lane
@@ -47,7 +48,7 @@ private:
 	bool isChangeLeft_ = false;
 	const int maxTime_ = 10;
 	int time_ = 0;
-
+	int changeMode_ = 0;//1‚ª¶2‚ª‰E
 
 };
 

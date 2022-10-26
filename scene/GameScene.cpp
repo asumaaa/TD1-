@@ -112,9 +112,9 @@ void GameScene::Update() {
 	goal_->Update();
 
 #pragma region 必殺技
-	if (goal_->bulletHit_[0] >= 10 &&
-		goal_->bulletHit_[1] >= 10 &&
-		goal_->bulletHit_[2] >= 10) {
+	if (goal_->bulletHit_[0] >= 7 &&
+		goal_->bulletHit_[1] >= 7 &&
+		goal_->bulletHit_[2] >= 7) {
 		isDeathblow_ = true;
 	}
 	else if (goal_->bulletHit_[0] <= 0 &&
@@ -125,7 +125,7 @@ void GameScene::Update() {
 	goal_->MaterDown(isDeathblow_);
 
 	if (isDeathblow_ == true) {
-		float powerRadius = 5.0f;
+		float powerRadius = 5.5f;
 		deathblowRadius += powerRadius;
 	}
 	else if (isDeathblow_ == false) {
@@ -224,8 +224,8 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID, int lane)
 	std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
 	//敵キャラの初期化
 	float kBulSpeed = 0.4f;
-	if (gameLevel_ > 0) {
-		kBulSpeed += gameLevel_ * 0.1f + 1.0f;	//レベルが上がると弾が加速
+	if (gameLevel_ > 0 && gameLevel_ < 6) {
+		kBulSpeed += gameLevel_ * 0.1f + 0.9f;	//レベルが上がると弾が加速
 	}
 
 	if (lane == 0) {

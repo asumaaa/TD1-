@@ -14,13 +14,13 @@ class GameScene;
 class Bullet
 {
 public:
-	void Initialize(Model* model, uint32_t textureHandle, Vector3 vector3,float kBulSpeed);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, float kBulSpeed);
 	void Update(Vector3 pos);
 	void Draw(ViewProjection viewProjection);
-	
+
 	bool IsDead() const { return isDead_; }	//死亡時
-	int GetId() { return bulletId_; }	
-	void SetID(int ID) { bulletId_ = ID; }	
+	int GetId() { return bulletId_; }
+	void SetID(int ID) { bulletId_ = ID; }
 	void SetFieldLane(int lane) { fieldLane_ = lane; };
 	int GetFieldLane() { return fieldLane_; }
 	//弾のイージング
@@ -43,7 +43,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
-	
+
 	//固有ID
 	int bulletId_ = 0;
 
@@ -60,9 +60,9 @@ private:
 
 	//現在のレーン
 	Lane lane_;
-	
+
 	//フィールド取得用
 	int fieldLane_ = 0;
 
+	float kBulSpeed_ = 0;
 };
-

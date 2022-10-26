@@ -49,14 +49,21 @@ void Field::Draw(ViewProjection viewProjection)
 void Field::Update()
 {
 	//ƒL[“ü—Í‚É‰ž‚¶‚ÄLane‚ð•ÏX
-	if (input_->PushKey(DIK_LEFT) && input_->TriggerKey(DIK_SPACE)
+	if (input_->PushKey(DIK_LEFT)) {
+		changeMode_ = 1;
+	}
+	else if (input_->PushKey(DIK_RIGHT)) {
+		changeMode_ = 2;
+	}
+
+	if (changeMode_ == 1 && input_->TriggerKey(DIK_SPACE)
 		&& isChangeLeft_ == false&& isChangeRight_ == false)
 	{
 		/*if (lane_ == Left)lane_ = Center;
 		else if (lane_ == Center)lane_ = Left;*/
 		isChangeLeft_ = true;
 
-	}else if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE)
+	}else if (changeMode_ == 2 && input_->TriggerKey(DIK_SPACE)
 		&& isChangeLeft_ == false && isChangeRight_ == false)
 	{
 		/*if (lane_ == Right)lane_ = Center;

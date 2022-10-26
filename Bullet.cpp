@@ -32,7 +32,7 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, f
 	{
 		lane_ = Right;
 	}
-
+	kBulSpeed_ = kBulSpeed;
 }
 
 void Bullet::Update(Vector3 pos)
@@ -69,8 +69,8 @@ void Bullet::Update(Vector3 pos)
 	worldTransformUpdate(&worldTransform_);
 
 	//ÉmÅ[ÉcÇÃë¨ìxÇÃèàóù
-	kBulletSpeedZ += kBulletSpeedAcc;
-	Vector3 kBulletSpeed = { 0.0f,0.0f,-easeIn(kBulletSpeedZ)};
+	kBulSpeed_ += kBulletSpeedAcc;
+	Vector3 kBulletSpeed = { 0.0f,0.0f,-easeIn(kBulSpeed_)};
 	worldTransform_.translation_ += kBulletSpeed;
 	worldTransformUpdate(&worldTransform_);
 

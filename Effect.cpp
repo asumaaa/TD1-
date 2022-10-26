@@ -15,7 +15,7 @@ void Effect::Initialize(Model* model, uint32_t textureHandle, Vector3 vec3)
 	float kMoveSpeed = 0.2f;	//スピード調整
 	float kRotSpeed = 0.2f;
 
-	//初期値をセット
+ 	//初期値をセット
 	for (int i = 0; i < EFFECT_NUM; i++) {
 		worldTransform_[i].Initialize();
 		worldTransform_[i].translation_ = vec3;
