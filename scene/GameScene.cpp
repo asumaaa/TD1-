@@ -57,10 +57,14 @@ void GameScene::Initialize() {
 		Sprite::Create(backTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
 
 	for (int i = 0; i < 10; i++) {
-		spritePurpleMater_[i].reset(Sprite::Create(laneTexture_[0], Vector2(50 + (20 * i), 500), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
-		spriteOrangeMater_[i].reset(Sprite::Create(laneTexture_[1], Vector2(50 + (20 * i), 550), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
-		spriteYellowMater_[i].reset(Sprite::Create(laneTexture_[2], Vector2(50 + (20 * i), 600), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+		spritePurpleMater_[i].reset(Sprite::Create(laneTexture_[0], Vector2(63 + (22 * i), 71), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+		spriteOrangeMater_[i].reset(Sprite::Create(laneTexture_[1], Vector2(63 + (22 * i), 101), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+		spriteYellowMater_[i].reset(Sprite::Create(laneTexture_[2], Vector2(63 + (22 * i), 131), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
 	}
+
+	uint32_t materTexture = TextureManager::Load("mater.png");
+	spriteMaterBack_.reset(Sprite::Create(materTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+
 
 	//必殺技用
 	deathblowTransform_ = new WorldTransform;
@@ -151,6 +155,7 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 	spriteBackGround_->Draw();
+	spriteMaterBack_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -192,6 +197,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	
 
 	for (int i = 0; i < 10; i++) {
 		if (i + 1 <= goal_->bulletHit_[0]) {
