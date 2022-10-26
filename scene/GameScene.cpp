@@ -56,6 +56,18 @@ void GameScene::Initialize() {
 	spriteBackGround_.reset(
 		Sprite::Create(backTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
 
+	uint32_t startTexture = TextureManager::Load("title.png");
+	spriteStart_.reset(
+		Sprite::Create(startTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+
+	uint32_t setumeiTexture = TextureManager::Load("setumei.png");
+	spriteSetumei_.reset(
+		Sprite::Create(setumeiTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+
+	uint32_t scoreTexture = TextureManager::Load("score.png");
+	spriteScore_.reset(
+		Sprite::Create(scoreTexture, Vector2(640, 360), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
+
 	for (int i = 0; i < 10; i++) {
 		spritePurpleMater_[i].reset(Sprite::Create(laneTexture_[0], Vector2(63 + (22 * i), 71), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
 		spriteOrangeMater_[i].reset(Sprite::Create(laneTexture_[1], Vector2(63 + (22 * i), 101), Vector4(1, 1, 1, 1), Vector2(0.5, 0.5)));
@@ -72,71 +84,102 @@ void GameScene::Initialize() {
 	deathblowTransform_->scale_ = { 2,0.5,2 };
 	isDeathblow_ = false;
 	//circle_ = Model::CreateFromOBJ("Skydome", true);
-
+	//ファイルの読み込み
+	if (sceneNo_ == SceneNo::Game) {
+		LoadBulletPopData();
+	}
 }
 
 void GameScene::Update() {
 
-	gameTimer_++;
-	if (gameTimer_ > 200) {
-		if (gameLevel_ < levelMax_) {
-			gameTimer_ = 0;
-			gameLevel_++;
+	switch (sceneNo_) {
+	case SceneNo::Title: //タイトル
+		if (input_->TriggerKey(DIK_SPACE) && sceneNo_ == SceneNo::Title) {
+			sceneNo_ = SceneNo::Operate;
+
 		}
-		else {
-			gameTimer_ = 0;
+		break;
+	case SceneNo::Operate: //操作説明(チュートリアル)
+		if (input_->TriggerKey(DIK_SPACE) && sceneNo_ == SceneNo::Operate) {
+			sceneNo_ = SceneNo::Game;
+			BulletReset();
+			hit_ = 0;
+		}
+		break;
+
+	case SceneNo::Game: //ゲーム
+		gameTimer_++;
+		if (gameTimer_ > 200) {
+			if (gameLevel_ < levelMax_) {
+				gameTimer_ = 0;
+				gameLevel_++;
+			}
+			else {
+				gameTimer_ = 0;
+			}
+
 		}
 
-	}
+		//デリート
+		bullets_.remove_if([](std::unique_ptr<Bullet>& bullet_) { return bullet_->IsDead(); });
+		effects_.remove_if([](std::unique_ptr<Effect>& effect_) { return effect_->IsDead(); });
 
-	//デリート
-	bullets_.remove_if([](std::unique_ptr<Bullet>& bullet_) { return bullet_->IsDead(); });
-	effects_.remove_if([](std::unique_ptr<Effect>& effect_) { return effect_->IsDead(); });
-
-	//デバッグカメラアップデート
-	debugCamera_->Update();
+		//デバッグカメラアップデート
+		debugCamera_->Update();
 
 
-	//弾発生
-	UpdateBulletPopCommands();
+		//弾発生
+		UpdateBulletPopCommands();
 
-	for (int i = 0; i < 3; i++) {
-		field_[i].Update();
-	}
+		for (int i = 0; i < 3; i++) {
+			field_[i].Update();
+		}
 
-	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-		bullet_->Update(field_[bullet_->GetFieldLane()].GetTransration());
-	}
+		for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
+			bullet_->Update(field_[bullet_->GetFieldLane()].GetTransration());
+		}
 
-	for (std::unique_ptr<Effect>& effect_ : effects_) {
-		effect_->Update();
-	}
+		for (std::unique_ptr<Effect>& effect_ : effects_) {
+			effect_->Update();
+		}
 
-	goal_->Update();
+		goal_->Update();
 
 #pragma region 必殺技
-	if (goal_->bulletHit_[0] >= 7 &&
-		goal_->bulletHit_[1] >= 7 &&
-		goal_->bulletHit_[2] >= 7) {
-		isDeathblow_ = true;
-	}
-	else if (goal_->bulletHit_[0] <= 0 &&
-		goal_->bulletHit_[1] <= 0 &&
-		goal_->bulletHit_[2] <= 0) {
-		isDeathblow_ = false;
-	}
-	goal_->MaterDown(isDeathblow_);
+		if (goal_->bulletHit_[0] >= 7 &&
+			goal_->bulletHit_[1] >= 7 &&
+			goal_->bulletHit_[2] >= 7) {
+			isDeathblow_ = true;
+		}
+		else if (goal_->bulletHit_[0] <= 0 &&
+			goal_->bulletHit_[1] <= 0 &&
+			goal_->bulletHit_[2] <= 0) {
+			isDeathblow_ = false;
+		}
+		goal_->MaterDown(isDeathblow_);
 
-	if (isDeathblow_ == true) {
-		float powerRadius = 5.0f;
-		deathblowRadius += powerRadius;
-	}
-	else if (isDeathblow_ == false) {
-		deathblowRadius = 0;
-	}
+		if (isDeathblow_ == true) {
+			float powerRadius = 5.0f;
+			deathblowRadius += powerRadius;
+		}
+		else if (isDeathblow_ == false) {
+			deathblowRadius = 0;
+		}
 #pragma endregion 必殺技
 
-	CheckAllCollisions();
+		CheckAllCollisions();
+
+		break;
+
+	case SceneNo::Over: //クリア
+		if (input_->TriggerKey(DIK_SPACE)&& sceneNo_ == SceneNo::Over) {
+
+			sceneNo_ = SceneNo::Title;
+		}
+		break;
+
+
+	}
 
 
 }
@@ -196,7 +239,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	
+
 
 	for (int i = 0; i < 10; i++) {
 		if (i + 1 <= goal_->bulletHit_[0]) {
@@ -208,6 +251,20 @@ void GameScene::Draw() {
 		if (i + 1 <= goal_->bulletHit_[2]) {
 			spriteYellowMater_[i]->Draw();
 		}
+	}
+
+	if (sceneNo_ == SceneNo::Title) {
+		spriteStart_->Draw();
+	}
+	else if (sceneNo_ == SceneNo::Operate) {
+		spriteSetumei_->Draw();
+	}
+	else if (sceneNo_ == SceneNo::Over) {
+		spriteScore_->Draw();
+		debugText_->SetPos(630.0f, 340.0f);
+		debugText_->SetScale(5.0f);
+		debugText_->Printf("%d/300", hit_);
+
 	}
 
 	// デバッグテキストの描画
@@ -396,6 +453,11 @@ void GameScene::UpdateBulletPopCommands()
 			//抜ける
 			break;
 		}
+		else if (word.find("OVER") == 0) {
+			sceneNo_ = SceneNo::Over;
+			break;
+			
+		}
 	}
 }
 
@@ -436,14 +498,15 @@ void GameScene::CheckAllCollisions() {
 
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
+			hit_++;
 		}
 
-		
+
 		if (cd <= deathblowRadius) {
 			//敵キャラの衝突時コールバックを呼び出す
 			bullet_->OnCollision(true);
 			GenerEffect(bullet_->GetWorldPosition(), bullet_->GetFieldLane());
-
+			hit_++;
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
 		}
@@ -453,6 +516,7 @@ void GameScene::CheckAllCollisions() {
 			if (goal_->bulletHit_[bullet_->GetFieldLane()] >= 5) {
 				goal_->bulletHit_[bullet_->GetFieldLane()]--;
 			}
+			
 		}
 
 

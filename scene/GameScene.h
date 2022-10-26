@@ -76,6 +76,14 @@ class GameScene {
 	int gameLevel_ = 0;
 	int levelMax_ = 8;
 
+	//シーン切り替え
+	enum class SceneNo {
+		Title, //タイトル
+		Operate, //操作説明(チュートリアル)
+		Game,  //射撃
+		Over   //ゲメオーバー
+	};
+
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -115,6 +123,9 @@ class GameScene {
 	std::unique_ptr<Sprite> spritePurpleMater_[10];//
 	std::unique_ptr<Sprite> spriteYellowMater_[10];//
 	std::unique_ptr<Sprite> spriteMaterBack_;
+	std::unique_ptr<Sprite> spriteStart_;
+	std::unique_ptr<Sprite> spriteSetumei_;
+	std::unique_ptr<Sprite> spriteScore_;
 
 	//レーンデバッグ用のテクスチャ
 	uint32_t laneTexture_[3];
@@ -134,4 +145,8 @@ class GameScene {
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	SceneNo sceneNo_ = SceneNo::Title;
+
+	//スコア
+	int hit_ = 0;
 };
