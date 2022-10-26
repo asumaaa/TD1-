@@ -73,7 +73,6 @@ void GameScene::Initialize() {
 	isDeathblow_ = false;
 	//circle_ = Model::CreateFromOBJ("Skydome", true);
 
-
 }
 
 void GameScene::Update() {
