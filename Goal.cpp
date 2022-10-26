@@ -47,7 +47,6 @@ void Goal::Update()
 
 	}
 
-	
 }
 
 void Goal::Draw(ViewProjection viewProjection)
@@ -74,4 +73,20 @@ Vector3 Goal::GetWorldPosition()
 void Goal::OnCollision()
 {
 
+}
+
+void Goal::MaterDown(bool isMaterDown)
+{
+	if (isMaterDown == true ) {
+		materDownTime_++;
+
+		if (materDownTime_ >= 4) {
+			materDownTime_ = 0;
+			for (int i = 0; i < 3; i++) {
+				bulletHit_[i]--;
+			}
+
+		}
+
+	}
 }

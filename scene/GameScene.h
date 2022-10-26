@@ -122,9 +122,13 @@ class GameScene {
 	bool isStand_ = false;
 	//待機タイマー
 	int standTime_ = 0;
-
 	int gameTimer_ = 0;
 	
+	//必殺技モデル用<-必殺技全般はゲームシーン直下です。ごめんなさい。
+	WorldTransform* deathblowTransform_ = nullptr;
+	bool isDeathblow_ = false;
+	Model* circle_ = nullptr;
+	float deathblowRadius = 0.0f;
 	
 	/// <summary>
 	/// ゲームシーン用
