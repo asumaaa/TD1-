@@ -274,6 +274,34 @@ void GameScene::Draw() {
 		debugText_->SetScale(5.0f);
 		debugText_->Printf("%d/200", hit_);
 
+		if (hit_ > 172) {
+			debugText_->SetPos(420.0f, 100.0f);
+			debugText_->SetScale(5.0f);
+			debugText_->Printf("rank S");
+		}
+		else if (hit_ > 135) {
+			debugText_->SetPos(420.0f, 100.0f);
+			debugText_->SetScale(5.0f);
+			debugText_->Printf("rank A");
+		}
+		else if (hit_ > 80) {
+			debugText_->SetPos(420.0f, 100.0f);
+			debugText_->SetScale(5.0f);
+			debugText_->Printf("rank B");
+		}
+		else if(hit_ > 40) {
+			debugText_->SetPos(420.0f, 100.0f);
+			debugText_->SetScale(5.0f);
+			debugText_->Printf("rank C");
+		}
+		else {
+			debugText_->SetPos(420.0f, 100.0f);
+			debugText_->SetScale(5.0f);
+			debugText_->Printf("rank D");
+		}
+
+
+
 	}
 
 	// デバッグテキストの描画
