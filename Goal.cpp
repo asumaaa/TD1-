@@ -80,10 +80,12 @@ void Goal::MaterDown(bool isMaterDown)
 	if (isMaterDown == true ) {
 		materDownTime_++;
 
-		if (materDownTime_ >= 4) {
+		if (materDownTime_ >= 7) {
 			materDownTime_ = 0;
 			for (int i = 0; i < 3; i++) {
-				bulletHit_[i]--;
+				if (bulletHit_[i] > 0) {
+					bulletHit_[i]--;
+				}
 			}
 
 		}

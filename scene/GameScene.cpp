@@ -67,7 +67,7 @@ void GameScene::Initialize() {
 	deathblowTransform_->Initialize();
 	deathblowTransform_->scale_ = { 2,0.5,2 };
 	isDeathblow_ = false;
-	circle_ = Model::CreateFromOBJ("Skydome", true);
+	//circle_ = Model::CreateFromOBJ("Skydome", true);
 
 
 }
@@ -112,9 +112,9 @@ void GameScene::Update() {
 	goal_->Update();
 
 #pragma region 必殺技
-	if (goal_->bulletHit_[0] >= 10 &&
-		goal_->bulletHit_[1] >= 10 &&
-		goal_->bulletHit_[2] >= 10) {
+	if (goal_->bulletHit_[0] >= 7 &&
+		goal_->bulletHit_[1] >= 7 &&
+		goal_->bulletHit_[2] >= 7) {
 		isDeathblow_ = true;
 	}
 	else if (goal_->bulletHit_[0] <= 0 &&

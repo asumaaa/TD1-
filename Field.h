@@ -47,6 +47,7 @@ private:
 	bool isChangeLeft_ = false;
 	const int maxTime_ = 10;
 	int time_ = 0;
+	int changeMode_ = 0; //1‚ª©2‚ª‰E
 
 
 };

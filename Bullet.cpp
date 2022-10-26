@@ -33,6 +33,7 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, f
 		lane_ = Right;
 	}
 
+	kBulletSpeedZ = kBulSpeed;
 }
 
 void Bullet::Update(Vector3 pos)
