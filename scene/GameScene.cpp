@@ -34,7 +34,7 @@ void GameScene::Initialize() {
 	RailCamera* newRailCamera = new RailCamera();
 	newRailCamera->Initialize();
 	railCamera_.reset(newRailCamera);
-	goal_ = new Goal;
+
 
 	testTexture2_ = TextureManager::Load("white.png");
 	goal_->Initialize(model_, testTexture2_);
@@ -131,7 +131,7 @@ void GameScene::Update() {
 
 		//デリート
 		bullets_.remove_if([](std::unique_ptr<Bullet>& bullet_) { return bullet_->IsDead(); });
-		effects_.remove_if([](std::unique_ptr<Effect>& effect_) { return effect_->IsDead(); });
+		
 
 		//デバッグカメラアップデート
 		debugCamera_->Update();
@@ -140,19 +140,14 @@ void GameScene::Update() {
 		//弾発生
 		UpdateBulletPopCommands();
 
-		for (int i = 0; i < 3; i++) {
-			field_[i].Update();
-		}
 
-		for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
+		/*for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
 			bullet_->Update(field_[bullet_->GetFieldLane()].GetTransration());
-		}
+		}*/
 
-		for (std::unique_ptr<Effect>& effect_ : effects_) {
-			effect_->Update();
-		}
+		
 
-		goal_->Update();
+		
 
 #pragma region 必殺技
 		if (goal_->bulletHit_[0] >= 7 &&
@@ -231,10 +226,6 @@ void GameScene::Draw() {
 		bullet_->Draw(railCamera_->GetViewProjection());
 	}
 
-	for (std::unique_ptr<Effect>& effect_ : effects_) {
-		effect_->Draw(railCamera_->GetViewProjection());
-	}
-	goal_->Draw(railCamera_->GetViewProjection());
 
 
 	// 3Dオブジェクト描画後処理
@@ -338,42 +329,42 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID, int lane)
 	}
 
 	newBullet->SetID(ID);
-	newBullet->SetFieldLane(lane);
+	//newBullet->SetFieldLane(lane);
 
 	//リストに登録する
 	bullets_.push_back(std::move(newBullet));
 
 }
 
-void GameScene::GenerEffect(Vector3 pos, int lane)
-{
-	//生成
-	std::unique_ptr<Effect> newEffect = std::make_unique<Effect>();
-	//敵キャラの初期化
-	int maxHitCount = 14;
-	if (lane == Left) {
-		newEffect->Initialize(model_, laneTexture_[Left], pos);
-		if (goal_->bulletHit_[Left] <= maxHitCount && isDeathblow_ == false) {
-			goal_->bulletHit_[Left]++;	//グローバル変数です。ごめんなさい。by細井
-		}
-	}
-	else if (lane == Center) {
-		newEffect->Initialize(model_, laneTexture_[Center], pos);
-		if (goal_->bulletHit_[Center] <= maxHitCount && isDeathblow_ == false) {
-			goal_->bulletHit_[Center]++;
-		}
-	}
-	else if (lane == Right) {
-		newEffect->Initialize(model_, laneTexture_[Right], pos);
-		if (goal_->bulletHit_[Right] <= maxHitCount && isDeathblow_ == false) {
-			goal_->bulletHit_[Right]++;
-		}
-	}
-
-	//リストに登録する
-	effects_.push_back(std::move(newEffect));
-
-}
+//void GameScene::GenerEffect(Vector3 pos, int lane)
+//{
+//	//生成
+//	std::unique_ptr<Effect> newEffect = std::make_unique<Effect>();
+//	//敵キャラの初期化
+//	int maxHitCount = 14;
+//	if (lane == Left) {
+//		newEffect->Initialize(model_, laneTexture_[Left], pos);
+//		if (goal_->bulletHit_[Left] <= maxHitCount && isDeathblow_ == false) {
+//			goal_->bulletHit_[Left]++;	//グローバル変数です。ごめんなさい。by細井
+//		}
+//	}
+//	else if (lane == Center) {
+//		newEffect->Initialize(model_, laneTexture_[Center], pos);
+//		if (goal_->bulletHit_[Center] <= maxHitCount && isDeathblow_ == false) {
+//			goal_->bulletHit_[Center]++;
+//		}
+//	}
+//	else if (lane == Right) {
+//		newEffect->Initialize(model_, laneTexture_[Right], pos);
+//		if (goal_->bulletHit_[Right] <= maxHitCount && isDeathblow_ == false) {
+//			goal_->bulletHit_[Right]++;
+//		}
+//	}
+//
+//	//リストに登録する
+//	effects_.push_back(std::move(newEffect));
+//
+//}
 
 
 
@@ -531,7 +522,7 @@ void GameScene::CheckAllCollisions() {
 		if (cd <= 4.0f) {
 			//敵キャラの衝突時コールバックを呼び出す
 			bullet_->OnCollision(true);
-			GenerEffect(bullet_->GetWorldPosition(), bullet_->GetFieldLane());
+			//GenerEffect(bullet_->GetWorldPosition(), bullet_->GetFieldLane());
 
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
@@ -542,7 +533,7 @@ void GameScene::CheckAllCollisions() {
 		if (cd <= deathblowRadius) {
 			//敵キャラの衝突時コールバックを呼び出す
 			bullet_->OnCollision(true);
-			GenerEffect(bullet_->GetWorldPosition(), bullet_->GetFieldLane());
+			//GenerEffect(bullet_->GetWorldPosition(), bullet_->GetFieldLane());
 			hit_++;
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
@@ -550,9 +541,6 @@ void GameScene::CheckAllCollisions() {
 
 		if (posA.z < -50/*画面外*/) {
 			bullet_->OnCollision(false);
-			if (goal_->bulletHit_[bullet_->GetFieldLane()] >= 5) {
-				goal_->bulletHit_[bullet_->GetFieldLane()]--;
-			}
 			
 		}
 

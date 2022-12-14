@@ -21,8 +21,7 @@ public:
 	bool IsDead() const { return isDead_; }	//死亡時
 	int GetId() { return bulletId_; }	
 	void SetID(int ID) { bulletId_ = ID; }	
-	void SetFieldLane(int lane) { fieldLane_ = lane; };
-	int GetFieldLane() { return fieldLane_; }
+	
 	//弾のイージング
 	float easeIn(float x);
 

@@ -19,19 +19,7 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, f
 	worldTransform_.scale_ = { 1,1,1 };
 	worldTransform_.rotation_ = { 0,0,0 };
 
-	//現在のXによってレーンを変更
-	if (worldTransform_.translation_.x < 0)
-	{
-		lane_ = Left;
-	}
-	else if (worldTransform_.translation_.x == 0)
-	{
-		lane_ = Center;
-	}
-	else if (worldTransform_.translation_.x > 0)
-	{
-		lane_ = Right;
-	}
+	
 
 	kBulletSpeedZ = kBulSpeed;
 }
@@ -39,31 +27,7 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, f
 void Bullet::Update(Vector3 pos)
 {
 	
-	////キー入力に応じてLaneを変更
-	//if (input_->PushKey(DIK_LEFT) && input_->TriggerKey(DIK_SPACE))
-	//{
-	//	if (lane_ == Left)lane_ = Center;
-	//	else if (lane_ == Center)lane_ = Left;
-	//}
-	//if (input_->PushKey(DIK_RIGHT) && input_->TriggerKey(DIK_SPACE))
-	//{
-	//	if (lane_ == Right)lane_ = Center;
-	//	else if (lane_ == Center)lane_ = Right;
-	//}
-
-	////Laneに応じてXを変更
-	//if (lane_ == Left)
-	//{
-	//	worldTransform_.translation_.x = -xDifference;
-	//}
-	//else if (lane_ == Center)
-	//{
-	//	worldTransform_.translation_.x = 0;
-	//}
-	//else if (lane_ == Right)
-	//{
-	//	worldTransform_.translation_.x = xDifference;
-	//}
+	
 	worldTransform_.translation_.x = pos.x;
 	worldTransform_.translation_.y = pos.y;
 

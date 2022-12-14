@@ -101,10 +101,7 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Ease.cpp" />
-    <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="Field.cpp" />
     <ClCompile Include="FPS.cpp" />
-    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="RailCamera.cpp" />
@@ -136,10 +133,8 @@
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Ease.h" />
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="FPS.h" />
-    <ClInclude Include="Goal.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\MathUtility.h" />
     <ClInclude Include="math\Matrix4.h" />
