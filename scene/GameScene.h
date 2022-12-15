@@ -13,21 +13,20 @@
 #include "list"
 #include "Skydome.h"
 #include "RailCamera.h"
-#include "Bullet.h"
+#include "Enemy.h"
 #include "sstream"
-#include "Field.h"
-#include "Goal.h"
-#include "Effect.h"
+#include"Player.h"
+
 
 /// <summary>
 /// ゲームシーン
 /// </summary>
 class GameScene {
 
-  public: // メンバ関数
-	/// <summary>
-	/// コンストクラタ
-	/// </summary>
+public: // メンバ関数
+  /// <summary>
+  /// コンストクラタ
+  /// </summary>
 	GameScene();
 
 	/// <summary>
@@ -50,25 +49,24 @@ class GameScene {
 	/// </summary>
 	void Draw();
 
-	//弾リストを取得
-	std::list<std::unique_ptr<Bullet>> bullets_;
-	const std::list<std::unique_ptr<Bullet>>& GetBullets() { return bullets_; }
-
-	//弾を足す
-	void AddBullet(std::unique_ptr<Bullet>& Bullet);
-	void GenerBullet(Vector3 BulletPos, int ID,int lane);
-
-	//エフェクト用
-	std::list<std::unique_ptr<Effect>> effects_;
-	void GenerEffect(Vector3 pos, int lane);
+	//敵リストを取得
+	std::list<std::unique_ptr<Enemy>> enemys_;
+	const std::list<std::unique_ptr<Enemy>>& GetEnemys() { return enemys_; }
 
 	
+
+	//敵を足す
+	void AddEnemy(std::unique_ptr<Enemy>& Enemy);
+	void GenerEnemy(Vector3 EnemyPos, int ID, int lane);
+
+
+
 	/// <summary>
 	/// 敵発生データ読み込み
 	/// </summary>
-	void LoadBulletPopData();
-	void BulletReset();
-	void UpdateBulletPopCommands();
+	void LoadEnemyPopData();
+	void EnemyReset();
+	void UpdateEnemyPopCommands();
 
 	//当たり判定
 	void CheckAllCollisions();
@@ -84,7 +82,7 @@ class GameScene {
 		Over   //ゲメオーバー
 	};
 
-  private: // メンバ変数
+private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -95,24 +93,21 @@ class GameScene {
 
 	//3Dモデル
 	Model* model_;
-	
+
 	//レーン
-	Field field_[3];
 	int popLane_ = 0;
 
-	//ゴール用
-	Goal* goal_ = nullptr;
+
 
 	ViewProjection viewProjection_;
 
-	//エフェクト用
-	Effect* effect_ = nullptr;
+
 
 	//レールカメラ
 	std::unique_ptr<RailCamera>railCamera_;
 
 	//csv
-	std::stringstream bulletPopCommands_;
+	std::stringstream enemyPopCommands_;
 
 	//テクスチャ
 	uint32_t testTexture_ = 0;
@@ -135,13 +130,13 @@ class GameScene {
 	//待機タイマー
 	int standTime_ = 0;
 	int gameTimer_ = 0;
-	
+
 	//必殺技モデル用<-必殺技全般はゲームシーン直下です。ごめんなさい。
 	WorldTransform* deathblowTransform_ = nullptr;
 	bool isDeathblow_ = false;
 	Model* circle_ = nullptr;
 	float deathblowRadius = 0.0f;
-	
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

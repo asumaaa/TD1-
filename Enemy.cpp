@@ -1,9 +1,9 @@
-#include "Bullet.h"
+#include "Enemy.h"
 #include <cmath>
 #include "math.h"
 #define PI 3.141592653589
 
-void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, float kBulSpeed)
+void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, float kBulSpeed)
 {
 	// NULLポインタチェック
 	assert(model);
@@ -19,39 +19,35 @@ void Bullet::Initialize(Model* model, uint32_t textureHandle, Vector3 vector3, f
 	worldTransform_.scale_ = { 1,1,1 };
 	worldTransform_.rotation_ = { 0,0,0 };
 
-	
 
-	kBulletSpeedZ = kBulSpeed;
+
+	kEnemySpeedZ = kBulSpeed;
 }
 
-void Bullet::Update(Vector3 pos)
+void Enemy::Update()
 {
-	
-	
-	worldTransform_.translation_.x = pos.x;
-	worldTransform_.translation_.y = pos.y;
 
 	worldTransformUpdate(&worldTransform_);
 
 	//ノーツの速度の処理
-	kBulletSpeedZ += kBulletSpeedAcc;
-	Vector3 kBulletSpeed = { 0.0f,0.0f,-easeIn(kBulletSpeedZ)};
-	worldTransform_.translation_ += kBulletSpeed;
+	kEnemySpeedZ += kEnemySpeedAcc;
+	Vector3 kEnemySpeed = { 0.0f,0.0f,-1.0f };
+	worldTransform_.translation_ += kEnemySpeed;
 	worldTransformUpdate(&worldTransform_);
 
 }
 
-void Bullet::Draw(ViewProjection viewProjection)
+void Enemy::Draw(ViewProjection viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
-float Bullet::easeIn(float x)
+float Enemy::easeIn(float x)
 {
 	return 1 - cos((x * PI) / 2);
 }
 
-Vector3 Bullet::GetWorldPosition()
+Vector3 Enemy::GetWorldPosition()
 {
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
@@ -63,7 +59,7 @@ Vector3 Bullet::GetWorldPosition()
 	return worldPos;
 }
 
-void Bullet::OnCollision(bool isBreak)
+void Enemy::OnCollision(bool isBreak)
 {
 	isDead_ = true;
 }

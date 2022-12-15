@@ -1,29 +1,29 @@
 #pragma once
+#pragma once
 #include "DebugText.h"
 #include "Input.h"
 #include "ViewProjection.h"
 #include <Model.h>
 #include <WorldTransform.h>
-#include <list>
-#include <cassert>
+#include<cassert>
 #include"Matrix.h"
-#include"Field.h"
+#include"stdlib.h"
+#include"list"
 
-class GameScene;
 
-class Bullet
+typedef struct linePos {
+	Vector3 startPos;
+	Vector3 endPos;
+};
+
+class Player
 {
 public:
-	void Initialize(Model* model, uint32_t textureHandle, Vector3 vector3,float kBulSpeed);
+	void Initialize(Model* model, uint32_t textureHandle);
 	void Update(Vector3 pos);
 	void Draw(ViewProjection viewProjection);
-	
+
 	bool IsDead() const { return isDead_; }	//死亡時
-	int GetId() { return bulletId_; }	
-	void SetID(int ID) { bulletId_ = ID; }	
-	
-	//弾のイージング
-	float easeIn(float x);
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
@@ -42,26 +42,17 @@ private:
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
-	
-	//固有ID
-	int bulletId_ = 0;
 
+	std::vector<linePos> lineList_;//ライン始点終点保存用
+
+	Vector3 nowPos = {};
+
+	
 	//デスフラグ
 	bool isDead_ = false;
 
-	float depth = 40.0f;	//奥行
-	float xDifference = 10.0f;	//左右差
-
-	//ノーツの速度
-	float kBulletSpeedZ = 0.4;
-	//ノーツの加速度
-	float kBulletSpeedAcc = 0.003;
-
-	//現在のレーン
-	Lane lane_;
 	
-	//フィールド取得用
-	int fieldLane_ = 0;
+
 
 };
 

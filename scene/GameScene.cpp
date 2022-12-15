@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include <cassert>
 #include<fstream>
+#include<stdlib.h>
 
 GameScene::GameScene() {}
 
@@ -37,19 +38,17 @@ void GameScene::Initialize() {
 
 
 	testTexture2_ = TextureManager::Load("white.png");
-	goal_->Initialize(model_, testTexture2_);
+
 
 	//テスト用のテクスチャ
 	testTexture_ = TextureManager::Load("green.png");
-	BulletReset();
+	EnemyReset();
 
 	//レーン
 	laneTexture_[0] = TextureManager::Load("purple.png");
 	laneTexture_[1] = TextureManager::Load("orange.png");
 	laneTexture_[2] = TextureManager::Load("yellow.png");
-	field_[0].Initialize(model_, laneTexture_[0], Left);
-	field_[1].Initialize(model_, laneTexture_[1], Center);
-	field_[2].Initialize(model_, laneTexture_[2], Right);
+	
 
 	//スプライト
 	uint32_t backTexture = TextureManager::Load("backGround.png");
@@ -86,7 +85,7 @@ void GameScene::Initialize() {
 	//circle_ = Model::CreateFromOBJ("Skydome", true);
 	//ファイルの読み込み
 	if (sceneNo_ == SceneNo::Game) {
-		LoadBulletPopData();
+		LoadEnemyPopData();
 	}
 }
 
@@ -102,17 +101,17 @@ void GameScene::Update() {
 	case SceneNo::Operate: //操作説明(チュートリアル)
 		if (input_->TriggerKey(DIK_SPACE) && sceneNo_ == SceneNo::Operate) {
 			sceneNo_ = SceneNo::Game;
-			for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-				bullet_->OnCollision(false);
+			for (std::unique_ptr<Enemy>& enemy_ : enemys_) {
+				enemy_->OnCollision(false);
 			}
-			BulletReset();
+			EnemyReset();
 			hit_ = 0;
 			gameLevel_ = 0;
 			gameTimer_ = 0;
-			goal_->bulletHit_[Left] = 0;
-			goal_->bulletHit_[Center] = 0;
-			goal_->bulletHit_[Right] = 0;
-			
+		/*	goal_->enemyHit_[Left] = 0;
+			goal_->enemyHit_[Center] = 0;
+			goal_->enemyHit_[Right] = 0;*/
+
 		}
 		break;
 
@@ -129,54 +128,30 @@ void GameScene::Update() {
 
 		}
 
-		//デリート
-		bullets_.remove_if([](std::unique_ptr<Bullet>& bullet_) { return bullet_->IsDead(); });
 		
+		
+		//デリート
+		enemys_.remove_if([](std::unique_ptr<Enemy>& enemy_) { return enemy_->IsDead(); });
+
 
 		//デバッグカメラアップデート
 		debugCamera_->Update();
 
 
 		//弾発生
-		UpdateBulletPopCommands();
+		UpdateEnemyPopCommands();
 
-
-		/*for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-			bullet_->Update(field_[bullet_->GetFieldLane()].GetTransration());
-		}*/
-
-		
-
-		
-
-#pragma region 必殺技
-		if (goal_->bulletHit_[0] >= 7 &&
-			goal_->bulletHit_[1] >= 7 &&
-			goal_->bulletHit_[2] >= 7) {
-			isDeathblow_ = true;
+		for (std::unique_ptr<Enemy>& enemy_ : enemys_) {
+			enemy_->Update();
 		}
-		else if (goal_->bulletHit_[0] <= 0 &&
-			goal_->bulletHit_[1] <= 0 &&
-			goal_->bulletHit_[2] <= 0) {
-			isDeathblow_ = false;
-		}
-		goal_->MaterDown(isDeathblow_);
 
-		if (isDeathblow_ == true) {
-			float powerRadius = 5.0f;
-			deathblowRadius += powerRadius;
-		}
-		else if (isDeathblow_ == false) {
-			deathblowRadius = 0;
-		}
-#pragma endregion 必殺技
 
 		CheckAllCollisions();
 
 		break;
 
 	case SceneNo::Over: //クリア
-		if (input_->TriggerKey(DIK_SPACE)&& sceneNo_ == SceneNo::Over) {
+		if (input_->TriggerKey(DIK_SPACE) && sceneNo_ == SceneNo::Over) {
 
 			sceneNo_ = SceneNo::Title;
 		}
@@ -200,8 +175,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-	spriteBackGround_->Draw();
-	spriteMaterBack_->Draw();
+	//spriteBackGround_->Draw();
+	//spriteMaterBack_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -217,13 +192,10 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	for (int i = 0; i < 3; i++)
-	{
-		field_[i].Draw(railCamera_->GetViewProjection());
-	}
 
-	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-		bullet_->Draw(railCamera_->GetViewProjection());
+
+	for (std::unique_ptr<Enemy>& enemy_ : enemys_) {
+		enemy_->Draw(railCamera_->GetViewProjection());
 	}
 
 
@@ -241,23 +213,12 @@ void GameScene::Draw() {
 	/// </summary>
 
 
-	for (int i = 0; i < 10; i++) {
-		if (i + 1 <= goal_->bulletHit_[0]) {
-			spritePurpleMater_[i]->Draw();
-		}
-		if (i + 1 <= goal_->bulletHit_[1]) {
-			spriteOrangeMater_[i]->Draw();
-		}
-		if (i + 1 <= goal_->bulletHit_[2]) {
-			spriteYellowMater_[i]->Draw();
-		}
-	}
 
 	if (sceneNo_ == SceneNo::Title) {
-		spriteStart_->Draw();
+		//spriteStart_->Draw();
 	}
 	else if (sceneNo_ == SceneNo::Operate) {
-		spriteSetumei_->Draw();
+		//SriteSetumei_->Draw();
 	}
 	else if (sceneNo_ == SceneNo::Over) {
 		spriteScore_->Draw();
@@ -280,7 +241,7 @@ void GameScene::Draw() {
 			debugText_->SetScale(5.0f);
 			debugText_->Printf("rank B");
 		}
-		else if(hit_ > 40) {
+		else if (hit_ > 40) {
 			debugText_->SetPos(420.0f, 100.0f);
 			debugText_->SetScale(5.0f);
 			debugText_->Printf("rank C");
@@ -304,14 +265,14 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::AddBullet(std::unique_ptr<Bullet>& Bullet)
+void GameScene::AddEnemy(std::unique_ptr<Enemy>& Enemy)
 {
 }
 
-void GameScene::GenerBullet(Vector3 BulletPos, int ID, int lane)
+void GameScene::GenerEnemy(Vector3 EnemyPos, int ID, int lane)
 {
 	//生成
-	std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
+	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
 	//敵キャラの初期化
 	float kBulSpeed = 0.4f;
 	if (gameLevel_ > 0) {
@@ -319,20 +280,20 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID, int lane)
 	}
 
 	if (lane == 0) {
-		newBullet->Initialize(model_, laneTexture_[0], BulletPos, kBulSpeed);
+		newEnemy->Initialize(model_, laneTexture_[0], EnemyPos, kBulSpeed);
 	}
 	else if (lane == 1) {
-		newBullet->Initialize(model_, laneTexture_[1], BulletPos, kBulSpeed);
+		newEnemy->Initialize(model_, laneTexture_[1], EnemyPos, kBulSpeed);
 	}
 	else if (lane == 2) {
-		newBullet->Initialize(model_, laneTexture_[2], BulletPos, kBulSpeed);
+		newEnemy->Initialize(model_, laneTexture_[2], EnemyPos, kBulSpeed);
 	}
 
-	newBullet->SetID(ID);
-	//newBullet->SetFieldLane(lane);
+	newEnemy->SetID(ID);
+	//newEnemy->SetFieldLane(lane);
 
 	//リストに登録する
-	bullets_.push_back(std::move(newBullet));
+	enemys_.push_back(std::move(newEnemy));
 
 }
 
@@ -344,20 +305,20 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID, int lane)
 //	int maxHitCount = 14;
 //	if (lane == Left) {
 //		newEffect->Initialize(model_, laneTexture_[Left], pos);
-//		if (goal_->bulletHit_[Left] <= maxHitCount && isDeathblow_ == false) {
-//			goal_->bulletHit_[Left]++;	//グローバル変数です。ごめんなさい。by細井
+//		if (goal_->enemyHit_[Left] <= maxHitCount && isDeathblow_ == false) {
+//			goal_->enemyHit_[Left]++;	//グローバル変数です。ごめんなさい。by細井
 //		}
 //	}
 //	else if (lane == Center) {
 //		newEffect->Initialize(model_, laneTexture_[Center], pos);
-//		if (goal_->bulletHit_[Center] <= maxHitCount && isDeathblow_ == false) {
-//			goal_->bulletHit_[Center]++;
+//		if (goal_->enemyHit_[Center] <= maxHitCount && isDeathblow_ == false) {
+//			goal_->enemyHit_[Center]++;
 //		}
 //	}
 //	else if (lane == Right) {
 //		newEffect->Initialize(model_, laneTexture_[Right], pos);
-//		if (goal_->bulletHit_[Right] <= maxHitCount && isDeathblow_ == false) {
-//			goal_->bulletHit_[Right]++;
+//		if (goal_->enemyHit_[Right] <= maxHitCount && isDeathblow_ == false) {
+//			goal_->enemyHit_[Right]++;
 //		}
 //	}
 //
@@ -368,7 +329,7 @@ void GameScene::GenerBullet(Vector3 BulletPos, int ID, int lane)
 
 
 
-void GameScene::LoadBulletPopData()
+void GameScene::LoadEnemyPopData()
 {
 	//ファイルを開く
 	std::ifstream file;
@@ -377,13 +338,13 @@ void GameScene::LoadBulletPopData()
 	assert(file.is_open());
 
 	//ファイルの内容を文字列ストリームにコピー
-	bulletPopCommands_ << file.rdbuf();
+	enemyPopCommands_ << file.rdbuf();
 
 	//ファイルを閉じる
 	file.close();
 }
 
-void GameScene::UpdateBulletPopCommands()
+void GameScene::UpdateEnemyPopCommands()
 {
 	//待機処理
 	if (isStand_) {
@@ -398,7 +359,7 @@ void GameScene::UpdateBulletPopCommands()
 	std::string line;
 
 	//コマンド実行ループ
-	while (getline(bulletPopCommands_, line)) {
+	while (getline(enemyPopCommands_, line)) {
 		// 1行分の文字数をストリームに変換して解折しやすくなる
 		std::istringstream line_stream(line);
 
@@ -425,16 +386,19 @@ void GameScene::UpdateBulletPopCommands()
 			float depth = 200.0f;	//奥行
 			float xDifference = 10.0f;	//左右差
 
+			Vector2 respawnPos = { float(rand() % 30) - 15,float(rand() % 20) - 10 };//x:15~-15,y:10~-10
 
 
-			if (lane == 1) {
+			GenerEnemy(Vector3(respawnPos.x, respawnPos.y, depth), ID, popLane_);
+
+			/*if (lane == 1) {
 				for (int i = 0; i < 3; i++) {
 					if (field_[i].GetLane() == 0) {
 						popLane_ = i;
 						break;
 					}
 				}
-				GenerBullet(Vector3(-xDifference, 0, depth), ID, popLane_);
+				GenerEnemy(Vector3(-xDifference, 0, depth), ID, popLane_);
 
 			}
 			else if (lane == 2) {
@@ -444,7 +408,7 @@ void GameScene::UpdateBulletPopCommands()
 						break;
 					}
 				}
-				GenerBullet(Vector3(0, 0, depth), ID, popLane_);
+				GenerEnemy(Vector3(0, 0, depth), ID, popLane_);
 			}
 			else if (lane == 3) {
 				for (int i = 0; i < 3; i++) {
@@ -453,12 +417,12 @@ void GameScene::UpdateBulletPopCommands()
 						break;
 					}
 				}
-				GenerBullet(Vector3(xDifference, 0, depth), ID, popLane_);
+				GenerEnemy(Vector3(xDifference, 0, depth), ID, popLane_);
 			}
 			else {
 
 
-			}
+			}*/
 		}
 		// WAITコマンド
 		else if (word.find("WAIT") == 0) {
@@ -484,16 +448,16 @@ void GameScene::UpdateBulletPopCommands()
 		else if (word.find("OVER") == 0) {
 			sceneNo_ = SceneNo::Over;
 			break;
-			
+
 		}
 	}
 }
 
-void GameScene::BulletReset()
+void GameScene::EnemyReset()
 {
-	bulletPopCommands_.str("");
-	bulletPopCommands_.clear(std::stringstream::goodbit);
-	LoadBulletPopData();
+	enemyPopCommands_.str("");
+	enemyPopCommands_.clear(std::stringstream::goodbit);
+	LoadEnemyPopData();
 }
 
 
@@ -506,12 +470,12 @@ void GameScene::CheckAllCollisions() {
 
 #pragma region 自弾と敵キャラの当たり判定
 	//敵キャラの座標
-	for (std::unique_ptr<Bullet>& bullet_ : bullets_) {
-		posA = bullet_->GetWorldPosition();
+	for (std::unique_ptr<Enemy>& enemy_ : enemys_) {
+		posA = enemy_->GetWorldPosition();
 
 
 		//自弾の座標
-		posB = goal_->GetWorldPosition();
+		posB = {0,0,-20};
 
 		float x = posB.x - posA.x;
 		float y = posB.y - posA.y;
@@ -521,8 +485,8 @@ void GameScene::CheckAllCollisions() {
 
 		if (cd <= 4.0f) {
 			//敵キャラの衝突時コールバックを呼び出す
-			bullet_->OnCollision(true);
-			//GenerEffect(bullet_->GetWorldPosition(), bullet_->GetFieldLane());
+			enemy_->OnCollision(true);
+			//GenerEffect(enemy_->GetWorldPosition(), enemy_->GetFieldLane());
 
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
@@ -532,16 +496,16 @@ void GameScene::CheckAllCollisions() {
 
 		if (cd <= deathblowRadius) {
 			//敵キャラの衝突時コールバックを呼び出す
-			bullet_->OnCollision(true);
-			//GenerEffect(bullet_->GetWorldPosition(), bullet_->GetFieldLane());
+			enemy_->OnCollision(true);
+			//GenerEffect(enemy_->GetWorldPosition(), enemy_->GetFieldLane());
 			hit_++;
 			//衝突時コールバックを呼び出す
 			//goal_->OnCollision();
 		}
 
 		if (posA.z < -50/*画面外*/) {
-			bullet_->OnCollision(false);
-			
+			enemy_->OnCollision(false);
+
 		}
 
 
