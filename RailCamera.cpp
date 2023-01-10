@@ -8,7 +8,7 @@ void RailCamera::Initialize()
 	
 	//ビュープロジェクションの初期化
 	
-	viewProjection_.eye = { 0,7,-50 };
+	viewProjection_.eye = { 0,4,-50 };
 	viewProjection_.target = { 0,0,-32 };
 	viewProjection_.Initialize();
 

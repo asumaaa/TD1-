@@ -31,6 +31,9 @@ void GameScene::Initialize() {
 	//モデル生成
 	model_ = Model::Create();
 
+	//オブジェクトインスタンス
+	player_ = new Player;
+
 	//レールカメラの生成
 	RailCamera* newRailCamera = new RailCamera();
 	newRailCamera->Initialize();
@@ -87,6 +90,14 @@ void GameScene::Initialize() {
 	if (sceneNo_ == SceneNo::Game) {
 		LoadEnemyPopData();
 	}
+
+	//インスタンス
+	player_->Initialize(model_,testTexture2_);
+
+	//それぞれのクラスインスタンスにセット
+	//player_->SetEnemy(enemy_);
+	
+
 }
 
 void GameScene::Update() {
@@ -128,10 +139,11 @@ void GameScene::Update() {
 
 		}
 
-		
+		player_->Update();
 		
 		//デリート
 		enemys_.remove_if([](std::unique_ptr<Enemy>& enemy_) { return enemy_->IsDead(); });
+
 
 
 		//デバッグカメラアップデート
@@ -198,6 +210,7 @@ void GameScene::Draw() {
 		enemy_->Draw(railCamera_->GetViewProjection());
 	}
 
+	player_->Draw(railCamera_->GetViewProjection());
 
 
 	// 3Dオブジェクト描画後処理
@@ -290,6 +303,7 @@ void GameScene::GenerEnemy(Vector3 EnemyPos, int ID, int lane)
 	}
 
 	newEnemy->SetID(ID);
+	newEnemy->SetPlayer(player_);
 	//newEnemy->SetFieldLane(lane);
 
 	//リストに登録する
@@ -383,13 +397,14 @@ void GameScene::UpdateEnemyPopCommands()
 			std::getline(line_stream, word, ',');
 			int ID = static_cast<int>(std::atof(word.c_str()));
 
-			float depth = 200.0f;	//奥行
+			float depth = 400.0f;	//奥行
 			float xDifference = 10.0f;	//左右差
 
 			Vector2 respawnPos = { float(rand() % 30) - 15,float(rand() % 20) - 10 };//x:15~-15,y:10~-10
 
 
 			GenerEnemy(Vector3(respawnPos.x, respawnPos.y, depth), ID, popLane_);
+			
 
 			/*if (lane == 1) {
 				for (int i = 0; i < 3; i++) {

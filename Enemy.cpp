@@ -64,3 +64,6 @@ void Enemy::OnCollision(bool isBreak)
 	isDead_ = true;
 }
 
+void Enemy::SetPlayer(Player* player) {
+	player_ = player;
+}

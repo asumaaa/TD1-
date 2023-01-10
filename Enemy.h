@@ -8,6 +8,9 @@
 #include <cassert>
 #include"Matrix.h"
 
+//前方宣言
+#include"Player.h"
+
 class GameScene;
 
 class Enemy
@@ -29,6 +32,9 @@ public:
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(bool isBreak);
+
+public:
+	void SetPlayer(Player* player);
 
 private:
 	//ワールド変換データ
@@ -61,6 +67,8 @@ private:
 
 	//フィールド取得用
 	int fieldLane_ = 0;
+
+	Player* player_ = nullptr;
 
 };
 

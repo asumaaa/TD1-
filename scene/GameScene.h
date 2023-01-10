@@ -101,6 +101,10 @@ private: // メンバ変数
 
 	ViewProjection viewProjection_;
 
+	//プレイヤー
+	Player* player_ = nullptr;
+
+
 
 
 	//レールカメラ
