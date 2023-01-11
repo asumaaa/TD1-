@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "DebugText.h"
 #include "Input.h"
 #include "ViewProjection.h"
@@ -19,7 +18,7 @@ typedef struct Line {
 	Vector2 eLineVec2;	//終点
 	WorldTransform worldTransform;
 	bool isDraw;
-	
+
 };
 
 class Player
@@ -37,7 +36,8 @@ public:
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(bool isBreak);
 
-public:
+public://計算
+	bool LineColide(Vector2 line_abStart, Vector2 line_abEnd, Vector2 line_cdStart, Vector2 line_cdEnd);
 
 
 private:
@@ -55,14 +55,13 @@ private:
 	//過去のライン
 	WorldTransform lineWorldTransform_[10];
 	Line line_[100];
-	
+
 	int nextLine_ = 0;
 
 	//現在地ライン
 	Vector3 nowStartPos = {};	//現在のライン保存用
 	Vector3 nowEndPos{};	//
 	WorldTransform nowLineWorldTransform_;
-
 
 	Vector3 pVelocity_ = {};
 
@@ -73,6 +72,8 @@ private:
 	int maxFlameCount_;	//プレイヤーが曲がるまでの挙動
 	int nowFlameCount_;
 
+	//攻撃
+	bool isAtk = false;
 
 
 };
