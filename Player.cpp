@@ -134,8 +134,24 @@ void Player::Update()
 #pragma region çUåÇ
 	if (isAtk == true) {
 		isAtk = false;
+		minVec2 = { nowEndPos.x, nowEndPos.y};
+		maxVec2 = { nowEndPos.x, nowEndPos.y };
 		for (int i = 0; i < _countof(line_); i++) {
-			line_[i].isDraw = false;
+			if (line_[i].isDraw == true) {
+				line_[i].isDraw = false;
+
+				if (line_[i].sLineVec2.x > maxVec2.x) {
+					if (line_[i].sLineVec2.y > maxVec2.y) {
+						maxVec2 = line_[i].sLineVec2;
+					}
+				}
+				else if (line_[i].sLineVec2.x < minVec2.x) {
+					if (line_[i].sLineVec2.y < minVec2.y) {
+						minVec2 = line_[i].sLineVec2;
+					}
+				}
+			}
+			
 		}
 	}
 #pragma endregion çUåÇ

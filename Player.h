@@ -32,6 +32,7 @@ public:
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
+	void SetAtkColide(Vector2 minVec2);
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(bool isBreak);
@@ -74,6 +75,8 @@ private:
 
 	//攻撃
 	bool isAtk = false;
-
+	Vector2 minVec2;
+	Vector2 maxVec2;
+	
 
 };
