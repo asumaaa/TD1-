@@ -20,10 +20,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 	worldTransform_.scale_ = { 1,1,1 };
 	worldTransform_.rotation_ = { 0,0.5 * PI,0 };
 	pVelocity_ = { 0,0,0.4f };	//プレイヤーの移動量
-	for (int i = 0; i < _countof(lineWorldTransform_); i++) {
-		lineWorldTransform_[i].Initialize();
-	}
-	nowLineWorldTransform_.Initialize();
+	
+	nowLineWorldTransform_.Initialize();	//自機の位置
 
 	//自機旋回フレームカウント
 	maxFlameCount_ = 70;
@@ -31,6 +29,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 
 	for (int i = 0; i < _countof(line_); i++) {
 		line_[i].worldTransform.Initialize();
+		line_[i].sLineVec2 = {};
+		line_[i].eLineVec2 = {};
 		line_[i].isDraw = false;
 		line_[i].worldTransform.translation_.x += i * 2;
 		worldTransformUpdate(&line_[i].worldTransform);
@@ -57,6 +57,7 @@ void Player::Update()
 	}
 #pragma endregion
 
+#pragma region 自機とライン保存
 	nowEndPos = worldTransform_.translation_;//ライン用の終点(毎フレーム更新)
 
 	//lineのトランスフォーム計算
@@ -88,54 +89,71 @@ void Player::Update()
 
 		nowFlameCount_ = 0;
 		worldTransform_.rotation_.x += 0.5 * PI;
-		nowStartPos = nowEndPos;
+		
 
-		for (int i = 0; i < _countof(line_); i++) {	//ライン保存
+		for (int i = 0; i < _countof(line_); i++) {	// ライン保存
 			if (line_[i].isDraw == false) {
 				line_[i].isDraw = true;
-				line_[i].worldTransform = nowLineWorldTransform_;
+				line_[i].worldTransform.translation_ = nowLineWorldTransform_.translation_;
+				line_[i].worldTransform.rotation_ = nowLineWorldTransform_.rotation_;
+				line_[i].worldTransform.scale_ = nowLineWorldTransform_.scale_;
 				
+				line_[i].sLineVec2 = { nowStartPos.x, nowStartPos.x };
+				line_[i].eLineVec2 = { nowEndPos.x, nowEndPos.x };
+
 				break;
 			}
 		}
+		nowStartPos = nowEndPos;	// 終点が視点になる
 
 	}
+#pragma endregion 自機とライン保存
 
-	
+#pragma region ラインと自機衝突
+	for (int i = 0; i < _countof(line_); i++) {
+		if (line_[i].isDraw == true) {
+			
+		}
 
-
+		
+	}
+#pragma endregion
 	
-	worldTransformUpdate(&worldTransform_);
-	worldTransformUpdate(&nowLineWorldTransform_);
-	
+#pragma region ワールドトランスフォーム更新
 	for (int i = 0; i < _countof(line_); i++) {
 		worldTransformUpdate(&line_[i].worldTransform);
 	}
-
+	worldTransformUpdate(&worldTransform_);
+	worldTransformUpdate(&nowLineWorldTransform_);
+#pragma endregion ワールドトランスフォーム更新
+	
+	
 }
 
 void Player::Draw(ViewProjection viewProjection)
 {
 
-	
-
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 	model_->Draw(nowLineWorldTransform_, viewProjection, textureHandle_);
 	for (int i = 0; i < _countof(line_); i++) {
-		//if (line_[i].isDraw == true) {
+		if (line_[i].isDraw == true) {
 		model_->Draw(line_[i].worldTransform, viewProjection, textureHandle_);
-		//}
+		}
+
 		//トランスレーション
 		debugText_->SetPos(20, 20 + i*15);
 		debugText_->Printf("%f,%f,%f", line_[i].worldTransform.translation_.x
 			, line_[i].worldTransform.translation_.y
 			, line_[i].worldTransform.translation_.z);
+
 		//スケール
 		debugText_->SetPos(300, 20 + i * 15);
 		debugText_->Printf("%f,%f,%f", line_[i].worldTransform.scale_.x
 			, line_[i].worldTransform.scale_.y
 			, line_[i].worldTransform.scale_.z);
+
 	}
+
 
 }
 

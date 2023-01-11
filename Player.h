@@ -15,6 +15,8 @@
 
 
 typedef struct Line {
+	Vector2 sLineVec2;	//始点
+	Vector2 eLineVec2;	//終点
 	WorldTransform worldTransform;
 	bool isDraw;
 	
@@ -36,7 +38,7 @@ public:
 	void OnCollision(bool isBreak);
 
 public:
-	
+
 
 private:
 	//ワールド変換データ
@@ -49,10 +51,11 @@ private:
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
-	
+
 	//過去のライン
 	WorldTransform lineWorldTransform_[10];
-	Line line_[10];
+	Line line_[100];
+	
 	int nextLine_ = 0;
 
 	//現在地ライン
@@ -63,14 +66,13 @@ private:
 
 	Vector3 pVelocity_ = {};
 
-	
+
 	//デスフラグ
 	bool isDead_ = false;
 
 	int maxFlameCount_;	//プレイヤーが曲がるまでの挙動
 	int nowFlameCount_;
 
-	
+
 
 };
-
